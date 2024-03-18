@@ -1,0 +1,392 @@
+- Eres un experto parseando texto. Sigues las instrucciones rigurosamente.
+- Estamos trabajando con las recetas de restaurantes.
+- Necesito que extraigas:
+-- El 'Nombre de la receta',
+-- La 'Categoria',
+-- Los 'Ingredientes',
+-- El 'Equipamiento',
+-- Las 'Dietary notes',
+-- Y el 'Procedimiento',
+Siguiendo siempre la estructura que explicare a continuacion.
+- El resultado lo vas a presentar posteriormente siguiendo exactamente esta estructura: 
+'''
+			[[[Nombre de la receta.]]]		   
+			
+			[Category.]
+			category
+			
+			[Ingredients.]
+			{{{ "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto", "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto". "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto", ... }}}
+			
+			[Equipment.]
+			{{{ "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", ...}}}
+			
+			[Dietary notes.]
+            {{{
+			- Nota 1
+			- Nota 2
+			- Nota ...
+            }}}
+			[Procedure.]
+            {{{
+			- Paso 1
+			- Paso 2
+			- Paso ...
+            }}}
+			[----]
+			
+			[[[Nombre de la receta.]]]		   
+			
+			[Category.]
+			category
+			
+			[Ingredients.]
+			{{{ "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto", "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto". "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto", ... }}}
+			
+			[Equipment.]
+			{{{ "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", ...}}}
+			
+			[Dietary notes.]
+            {{{
+			- Nota 1
+			- Nota 2
+			- Nota ...
+			
+			[Procedure.]
+            {{{
+			- Paso 1
+			- Paso 2
+			- Paso ...
+			
+			[----]
+			
+			[[[Nombre de la receta.]]]
+			
+			[Category.]
+			
+			category
+			[Ingredients.]
+			{{{ "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto", "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto". "nombre del Ingrediente en texto, numero con la cantidad, unidad de la cantidad en texto", ... }}}
+			
+			[Equipment.]
+			{{{ "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", "nombre del Equipamiento en texto, comentario del equipamiento si es necesario en texto", ...}}}
+			
+			[Dietary notes.]
+            {{{
+			- Nota 1
+			- Nota 2
+			- Nota ...
+            }}}
+			
+			[Procedure.]
+            {{{
+			- Paso 1
+			- Paso 2
+			- Paso ...
+			}}}
+			[----]
+			
+			[[[...]]]		   
+			
+			[Category.]
+			{{{
+            ...
+			}}}
+			[Ingredients.]
+            {{{
+			...
+            }}}
+			
+			[Equipment.]
+            {{{
+			...
+            }}}
+			
+			[Dietary notes.]
+            {{{
+			...
+            }}}
+			
+			[Procedure.]
+            {{{
+			...
+            }}}
+			
+			[----]
+
+'''
+
+- Recuerda tu respuesta tiene 6 componentes siempre. Estas tres componentes son  'Nombre de la receta', la 'Categoria', los 'Ingredientes', el 'Equipamiento', las 'Dietary notes.' y el 'Procedimiento'. Revisa que la estructura es la correcta en cada respuesta. 
+- Recuerda tu respuesta en el componente 'Ingredientes' tiene 3 componentes siempre. Estas tres componentes son Ingrediente, cantidad, unidad de la cantidad. Revisa que la estructura es la correcta en cada respuesta. 
+- Recuerda tu respuesta en el componente 'Equipment' tiene 2 componentes siempre. Estos componentes son Equipamiento, comentario con respecto del equipamiento si es necesario. Revisa que la estructura es la correcta en cada respuesta.
+
+- Las recetas las delimitaremos por triple comilla simple. 
+- en tus respuestas NO QUIERO codigo de ningun tipo, en tus respuestas utilizaras solo TEXTO.
+- Si desconoces algun componente o item dentro de un componente simplemente o lo dejaras en blanco o diras que no tienes informacion al respecto.
+- Utiliza en tus respuestas los parentesis, tanto '[,],{,}' son muy importantes en la estructura, ya que luego los utilizaremos para recopilar la informacion.
+- Puedes parsear varias recetas y separarlas segun la estructura.
+- Es importante que respondas en una sola respuesta, no importa que tardes, pero sí es importante que respondas en una sola respuesta.
+
+Ejemplo de respuesta:
+[[[Crust Cake]]]
+
+[Category.] Cakes
+
+[Ingredients.] {{{ "Smjorliki, 500, grams", "Eggs, 200, milliliters", "Sugar, 2, US cups", "Vanilla, 1, shot", "Salt, 1, pinch", "Flour, 8, US cups", "Baking soda, 1, small spoon" }}}
+
+[Equipment.] {{{ "Small mixer with paddle attachment", "Baking sheets", "Cake tin base and ring", "Black oven trays" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: No
+Vegan: No
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Step 1: Prepare Smjorliki by melting 500g in the microwave.
+Step 2: Begin initial mixing with eggs, sugar, and vanilla in the small mixer.
+Step 3: Mix at maximum speed for a well-mixed batter.
+Step 4: Add melted Smjorliki and mix.
+Step 5: Add dry ingredients including salt, flour, and mix.
+Step 6: Add a small spoon of baking soda.
+Step 7: Divide the mix, shape into circles, poke holes, and prepare for baking.
+Step 8: Bake at 150 degrees Celsius for 12 minutes.
+}}}
+[----]
+
+[[[Skyr Cake]]]
+
+[Category.] Cakes
+
+[Ingredients.] {{{ "Rjomi, 2, liters", "Rjoma Ostur, 4, kilograms", "Powdered sugar, 4, kilograms", "Skyr, 5, kilograms", "Vanilla, 1, shot", "Gelatin powder, 200, grams" }}}
+
+[Equipment.] {{{ "Big mixer with whisk attachment", "Crystal bowl", "Cake pan or tin" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: Yes
+Vegan: No
+Vegetarian: Potentially (depending on the type of gelatin used)
+}}}
+[Procedure.]
+{{{
+Step 1: Combine Rjomi, Rjoma Ostur, powdered sugar, Skyr, and vanilla in the big mixer.
+Step 2: Start mixing.
+Step 3: Prepare gelatin in the crystal bowl with heated Rjomi and water.
+Step 4: Combine gelatin mixture with the other ingredients in the big mixer.
+Step 5: Pour mix into cake pan and let sit.
+Step 6: Place in cooler to set.
+{{{
+
+[----]
+
+[[[New York Cheesecake]]]
+
+[Category.] Cakes
+
+[Ingredients.] {{{ "Cream cheese, 7, kilograms", "Eggs, 15, US cups", "Flour, 5, US cups", "White sugar, 9, cups", "Vanilla, 1, shot" }}}
+
+[Equipment.] {{{ "Big mixer with whisk attachment", "Cake pan or tin" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: No
+Vegan: No
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Step 1: Prepare cheese mixture with cream cheese, eggs, flour, sugar, and vanilla.
+Step 2: Mix well.
+Step 3: Pour into cake pan.
+Oven Stage First: Preheat to 210°C for 12-15 minutes.
+Oven Stage Second: Lower temperature to 90°C and bake for 90 minutes.
+Cooling: Place in cooler to set.
+}}}
+[----]
+
+[[[Crust Cake]]]
+
+[Category.] Cakes
+
+[Ingredients.] {{{ "Smjorliki, 0.5, kilograms", "Brown sugar, 0.5, kilograms", "Cinnamon, 25, grams", "Soy milk, 0.5, cups", "Flour, 10, cups" }}}
+
+[Equipment.] {{{ "Small Mixer with paddle attachment", "" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: No
+Vegan: No
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Step 1: Prepare topping in the small mixer with Smjorliki, brown sugar, cinnamon, soy milk, and flour.
+Step 2: Start mixing until well combined.
+Second Oven Stage for New York Cheesecake:
+Step 1: Preheat oven to 150°C.
+Step 2: Add surmjolk (cream) on top of base cake.
+Step 3: Spread prepared topping over surmjolk layer.
+Step 4: Bake at 150°C for 15 minutes.
+Step 5: Place cakes in cooler to set.
+}}}
+[----]
+
+[[[Frosting Cream]]]
+
+[Category.] Cakes
+
+[Ingredients.] {{{ "Smjorliki, 1, kilogram", "Powdered sugar, 5, kilograms", "Vanilla, 1, shot", "Soy milk, 0.625, liters", "Cocoa powder, 0.5, kilograms", "Chocolate syrup, 1, US cup" }}}
+
+[Equipment.] {{{ "Big mixer with whisk attachment", "" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: Yes
+Vegan: No
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Step 1: Start with initial mixing of smjorliki, powdered sugar, and vanilla.
+Step 2: Slowly incorporate soy milk.
+Step 3: Increase mixer speed for 5 minutes.
+Step 4: For chocolate variation, add cocoa powder and chocolate syrup.
+Step 5: Final mix to combine all ingredients.
+}}}
+[----]
+
+[[[Carrot Cake]]]
+
+[Category.] Cakes
+
+[Ingredients.] {{{ "Chia seeds, 3, tablespoons", "Water, enough to reach egg-like consistency", "Vegetable oil, 7.5, liters", "Sugar, 12, US cups", "Flour, 18, US cups", "Baking powder, 1, box", "Shredded carrots, 3, kilograms", "Vanilla, 1, shot", "Cinnamon powder, 1, cup", "Salt, 1, pinch", "Soy milk, 1, liter" }}}
+
+[Equipment.] {{{ "Small bowl", "Whisk paddle", "Big mixer", "Measuring cups and spoons", "10 cake tins", "Baking sheets", "Oil spray", "Oven", "Spoons" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: No
+Vegan: Yes
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Preparing Chia "Egg":
+Step 1: Mix chia seeds with water to egg-like consistency.
+Batter Preparation:
+Step 1 to 12: Combine oil, sugar, chia "egg", flour, baking powder, carrots, vanilla, cinnamon, salt, and soy milk in big mixer.
+Preparing Cake Tins: Line and grease 10 cake tins.
+Baking: Preheat to 150°C and bake for 30 minutes.
+}}}
+[----]
+
+[[[Chocolate Cake]]]
+
+[Category.] Cakes
+
+[Ingredients.] {{{ "Vegetable oil, 3, US cups", "Surmjolk, 1, liter", "Coffee, 3, US cups", "Eggs, 3-4, US cups", "Vanilla, 1, shot", "Flour, 1.6, kilograms", "Brown sugar, 1.2, kilograms", "White sugar, 1.2, kilograms", "Baking powder, 1, bag", "Salt, 1, hand", "Cacao, 500, grams" }}}
+
+[Equipment.] {{{ "Large mixer", "Measuring cups", "Measuring spoons", "Kitchen scale", "10 cake tins", "10 baking sheets", "Oil spray", "Oven", "Spoons", "Knife or cake leveler" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: No
+Vegan: No
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Step 1: Combine all ingredients in large mixer.
+Step 2: Prepare cake tins and sheets, grease tins.
+Step 3: Divide mixture among tins.
+Step 4: Preheat oven and bake at 150°C for an unspecified time.
+Step 5: Cut around inside circle of cake to remove from tin base.
+}}}
+[----]
+
+[[[Apple Crumble]]]
+
+[Category.] Counter
+
+[Ingredients.] {{{ "Smjorkliki, 2, kilograms", "Soya milk, 2, US cups", "Brown sugar, 2, bags", "White sugar, 8, US cups", "Cinnamon, 1, US cup", "Oats, 40, US cups", "Flour, 20, US cups", "Frost apple, 1600, grams" }}}
+
+[Equipment.] {{{ "Large mixer", "Kitchen scale", "Measuring cups", "Metal tray", "Big green spoon", "Oven", "Knife or spatula" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: No
+Vegan: Yes
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Step 1: Mix the main ingredients in the large mixer.
+Step 2: Create a base of crumble mix in the tray.
+Step 3: Combine frost apple with a spoon of crumble mix.
+Step 4: Spread mixture over base and top with crumble mixture.
+Step 5: Bake at 150°C for 30 minutes.
+}}}
+[----]
+
+[[[Brownies]]]
+
+[Category.] Counter
+
+[Ingredients.] {{{ "Smorjliki, 500, grams", "Chocolate, 3, packs", "Egg, 4, US cups", "Sugar, 3, US cups", "Gluten-Free Plain white flour, 1, bag", "Cocoa, 1, US cup", "Optional: nuts, for topping" }}}
+
+[Equipment.] {{{ "Microwave or stove", "Small mixer with whisk attachment", "Measuring cups", "Kitchen scale", "Metal bowl", "Oven", "2 crystal baking trays", "Baking paper", "Oil spray", "Knife or spatula", "Additional baking paper", "Black tray" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: Yes
+Vegan: No
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Step 1: Prepare ingredients sets (C) and (B) by melting Smorjliki and chocolate, and set (A) with eggs and sugar.
+Step 2: Start mixing ingredients from sets (A), (C), flour, and cocoa in small mixer.
+Step 3: Add melted chocolate from set (B).
+Step 4: Prepare trays with baking paper, pour mixture, and bake at 150°C for 40 minutes.
+Step 5: Spread additional melted chocolate and add nuts.
+}}}
+[----]
+
+[[[Cookies]]]
+
+[Category.] Counter
+
+[Ingredients.] {{{ "Butter, 2, bars", "Eggs, 3.5, US cups", "Brown sugar, 1.2, kilograms", "White sugar, 1.2, kilograms", "Vanilla, 1, shot", "Oats, 18-20, US cups", "Baking powder, 1, box", "Flour, 15, US cups", "Salt, 1, pinch", "Chocolate chips, 4-5, US cups" }}}
+
+[Equipment.] {{{ "Microwave", "Big mixer", "Mixer bowl", "Measuring cups", "Kitchen scale", "Big rag", "Counter space", "Rolling pin", "Knife or dough cutter", "Viking beer glass", "Hands", "Metal oven trays", "Oven", "Timer or clock" }}}
+
+[Dietary notes.]
+{{{
+Gluten-Free: No
+Vegan: No
+Vegetarian: Yes
+}}}
+[Procedure.]
+{{{
+Mixer Stage:
+Step 1: Melt butter, prepare eggs, sugars, vanilla, and mix until white cream color.
+Step 2: Add melted butter, oats, and mix.
+Step 3: Add baking powder, flour, salt, and mix.
+Step 4: Add chocolate chips.
+Counter Stage:
+Step 1: Roll and cut dough.
+Step 2: Weigh cookies using Viking beer glass.
+Step 3: Shape cookies and place on trays.
+Oven Stage:
+Step 1: Bake at 150°C for 10-15 minutes, check and bake further if needed.
+Step 2: Remove cookies once slightly dry.
+}}}
+[----]
+
+Despues parsear cada receta, asegurate de que tenga el correcto formato que nosotros deseamos.
+
+
+
+
