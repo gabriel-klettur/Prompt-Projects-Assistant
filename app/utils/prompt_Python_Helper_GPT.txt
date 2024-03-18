@@ -1,7 +1,12 @@
-Hola Gpt! Respira profundamente.
+Saludo.
+- Hola Gpt! Respira profundamente.
+
 Estoy desarrollando un proyecto en Flask.
-El proyecto es una aplicacion para ayudar en la gestion y administracion de Restaurantes y Cafeterias.
-La aplicacion intentara ayudar en la administracion y gestion a los Managers de un Restaurante o Cafeteria.
+
+Objetivo del Proyecto.
+-El proyecto es una aplicacion para ayudar en la gestion y administracion de Restaurantes y Cafeterias.
+-La aplicacion intentara ayudar en la administracion y gestion a los Managers de un Restaurante o Cafeteria.
+
 Las paginas principales de la aplicacion son:
     '
         - Recetario.
