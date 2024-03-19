@@ -1,6 +1,17 @@
 import os
 
 def estructura_de_carpetas(directorio, prefijo=''):
+    """
+    Recursively generates the folder structure of a directory.
+
+    Args:
+        directorio (str): The path of the directory to generate the structure for.
+        prefijo (str, optional): The prefix to be added to each line of the structure. Defaults to ''.
+
+    Returns:
+        str: The generated folder structure.
+
+    """
     resultado = ''  # Variable para acumular la estructura de las carpetas
     with os.scandir(directorio) as entradas:
         for entrada in entradas:

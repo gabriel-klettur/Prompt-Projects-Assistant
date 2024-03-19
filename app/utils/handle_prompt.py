@@ -1,6 +1,18 @@
 import re
 
+import re
+
 def crea_prompt(ruta_archivo, estructura_de_carpetas):
+    """
+    Modifies the content of a file by adding the folder structure at the specified location.
+
+    Args:
+        ruta_archivo (str): The path of the file to be modified.
+        estructura_de_carpetas (str): The folder structure to be added.
+
+    Returns:
+        str: The modified content of the file with the folder structure added.
+    """
     with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
         contenido = archivo.read()
     
