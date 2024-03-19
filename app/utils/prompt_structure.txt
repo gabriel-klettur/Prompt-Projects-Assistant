@@ -1,0 +1,19 @@
+- Hola Gpt! Respira profundamente.
+
+Estoy desarrollando una aplicacion para ayudarme con mis proyectos en python.
+
+Objetivo de la aplicacion.
+- Crear un prompt para utilizar en GPT.
+- Este prompt proporcionara el contexto para poder realizar modificaciones en la aplicacion que quiera modificar.
+- Este contexto deberia contener la informacion de la estructura de directorios y de los archivos que deseamos modificar.
+
+
+Mi estructura de directorios actual es:
+'''
+
+
+'''
+
+Me ayudaras a mejorar y a implementar ideas en mi codigo.
+
+
