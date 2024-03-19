@@ -6,7 +6,7 @@ from tkinter import ttk
 
 from colorama import Fore
 
-from app.utils.project_data import estructura_de_carpetas
+from app.utils.project_data import estructura_de_carpetas, generar_contenido_archivos
 from app.utils.handle_prompt import crea_prompt
 
 # Variable global para almacenar los archivos seleccionados.
@@ -34,19 +34,44 @@ def main():
                 print(Fore.RED + prompt_gpt + Fore.RESET)
                 copiar_al_portapapeles(root, prompt_gpt)
 
-def seleccionar_carpeta(root):
-    """Abre un diálogo para seleccionar una carpeta."""
+def seleccionar_carpeta(root):    
+    """
+    Opens a dialog box to select a folder.
+
+    Parameters:
+    root (Tk): The parent window for the dialog box.
+
+    Returns:
+    str: The path of the selected folder.
+
+    """
     carpeta_seleccionada = filedialog.askdirectory(parent=root)  # Usamos 'root' como parent.
     return carpeta_seleccionada
 
 def copiar_al_portapapeles(root, texto):
-    """Copia el texto al portapapeles y muestra un mensaje."""
+    """
+    Copies the given text to the clipboard.
+
+    Parameters:
+    - root: The root Tkinter window.
+    - texto: The text to be copied to the clipboard.
+    """
     root.clipboard_clear()
     root.clipboard_append(texto)
     root.update()
     messagebox.showinfo("Prompt Assistant", "Prompt copiado al portapapeles.", parent=root)
 
 def mostrar_arbol_directorios(root, carpeta):
+    """
+    Muestra un árbol de directorios en una nueva ventana y permite seleccionar archivos.
+
+    Args:
+        root: La ventana principal a la que se adjuntará la nueva ventana.
+        carpeta: La ruta de la carpeta raíz del árbol de directorios.
+
+    Returns:
+        None
+    """
     ventana = tk.Toplevel(root)  # Usamos Toplevel para crear una nueva ventana.
     ventana.title("Seleccionar Archivos del Árbol de Directorios")
     
@@ -56,16 +81,34 @@ def mostrar_arbol_directorios(root, carpeta):
     nodos_rutas = {}  # Diccionario para mapear nodos a sus rutas
 
     def insertar_nodo(padre, texto, path):
-            """Inserta un nodo en el árbol, asociándolo con su ruta."""
-            nodo = tree.insert(padre, 'end', text=texto, open=False)
-            if os.path.isdir(path):
-                # Se inserta un placeholder para que el directorio pueda expandirse
-                tree.insert(nodo, 'end')
-            nodos_rutas[nodo] = path  # Asociamos el nodo con su ruta
-            return nodo
+        """
+        Inserta un nodo en el árbol, asociándolo con su ruta.
+
+        Parameters:
+            padre (str): El identificador del nodo padre.
+            texto (str): El texto a mostrar en el nodo.
+            path (str): La ruta asociada al nodo.
+
+        Returns:
+            str: El identificador del nodo insertado.
+        """
+        nodo = tree.insert(padre, 'end', text=texto, open=False)
+        if os.path.isdir(path):
+            # Se inserta un placeholder para que el directorio pueda expandirse
+            tree.insert(nodo, 'end')
+        nodos_rutas[nodo] = path  # Asociamos el nodo con su ruta
+        return nodo
 
     def cargar_arbol(nodo):
-        """Carga los contenidos de un directorio en el árbol bajo el nodo dado."""
+        """
+        Carga los contenidos de un directorio en el árbol bajo el nodo dado.
+
+        Args:
+            nodo (str): El nodo bajo el cual se cargarán los contenidos del directorio.
+
+        Returns:
+            None
+        """
         path = nodos_rutas.get(nodo)  # Obtenemos la ruta del nodo
         if path and os.path.isdir(path):
             # Primero, limpia los nodos hijos existentes (incluido el placeholder)
@@ -96,19 +139,22 @@ def mostrar_arbol_directorios(root, carpeta):
     ventana.wait_window()  # Espera a que la ventana 'ventana' se cierre.
 
 def confirmar_seleccion(tree, nodos_rutas, ventana):
+    """
+    Confirms the selection made in the treeview widget.
+
+    Args:
+        tree (TreeView): The treeview widget containing the selection.
+        nodos_rutas (dict): A dictionary mapping tree nodes to file paths.
+        ventana (Window): The window object to be destroyed.
+
+    Returns:
+        None
+    """
     global archivos_seleccionados
     seleccionados = tree.selection()
     archivos_seleccionados = [nodos_rutas[nodo] for nodo in seleccionados if os.path.isfile(nodos_rutas[nodo])]
     ventana.destroy()
 
-def generar_contenido_archivos(archivos):
-    """Genera el contenido de los archivos seleccionados para el prompt."""
-    contenido_archivos = ""
-    for archivo in archivos:
-        with open(archivo, 'r', encoding='utf-8') as f:
-            contenido = f.read()
-            contenido_archivos += f"\n El archivo: {os.path.basename(archivo)}, Contiene:'''{contenido}'''\n"
-    return contenido_archivos
 
 if __name__ == "__main__":
     main()
