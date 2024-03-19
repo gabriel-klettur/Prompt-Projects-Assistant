@@ -18,6 +18,19 @@ def copiar_al_portapapeles(root, texto):
 def mostrar_arbol_directorios(root, carpeta):
     ventana = tk.Toplevel(root)
     ventana.title("Seleccionar Archivos del Árbol de Directorios")
+    
+    # Ajustar el tamaño de la ventana (p. ej., 800x600).
+    ancho_ventana = 800
+    alto_ventana = 600
+    ventana.geometry(f"{ancho_ventana}x{alto_ventana}")
+
+    # Calcular la posición x y y para centrar la ventana.
+    posicion_x = (ventana.winfo_screenwidth() // 2) - (ancho_ventana // 2)
+    posicion_y = (ventana.winfo_screenheight() // 2) - (alto_ventana // 2)
+    
+    # Actualizar la geometría de la ventana para que aparezca centrada.
+    ventana.geometry(f"+{posicion_x}+{posicion_y}")
+    
     archivos_seleccionados_temp = []  # Lista temporal para almacenar los archivos seleccionados
     
     tree = ttk.Treeview(ventana, selectmode='extended')
