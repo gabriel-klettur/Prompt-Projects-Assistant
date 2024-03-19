@@ -1,8 +1,5 @@
 import os
 import tkinter as tk
-from tkinter import filedialog
-from tkinter import messagebox
-from tkinter import ttk
 
 from colorama import Fore
 
@@ -25,12 +22,10 @@ def main():
         archivos_seleccionados = mostrar_arbol_directorios(root, carpeta)  # Ahora captura los archivos seleccionados aquí
         
         if archivos_seleccionados:
-            contenido_archivos = generar_contenido_archivos(archivos_seleccionados)
-            
-            if estructura:
-                prompt_gpt = crea_prompt(path_prompt_base_txt, estructura, contenido_archivos)
-                print(Fore.RED + prompt_gpt + Fore.RESET)
-                copiar_al_portapapeles(root, prompt_gpt)
+            contenido_archivos = generar_contenido_archivos(archivos_seleccionados)        
+            prompt_gpt = crea_prompt(path_prompt_base_txt, estructura, contenido_archivos)
+            print(Fore.RED + prompt_gpt + Fore.RESET)
+            copiar_al_portapapeles(root, prompt_gpt)
 
 if __name__ == "__main__":
     main()
