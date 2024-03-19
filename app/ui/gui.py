@@ -26,9 +26,12 @@ def mostrar_arbol_directorios(root, carpeta):
     nodos_rutas = {}
 
     def insertar_nodo(padre, texto, path):
+        # Omitir la inserción si el directorio es __pycache__
+        if os.path.isdir(path) and texto == "__pycache__":
+            return None  # No se crea un nodo para __pycache__
         nodo = tree.insert(padre, 'end', text=texto, open=False)
         if os.path.isdir(path):
-            tree.insert(nodo, 'end')
+            tree.insert(nodo, 'end')  # Insertar un nodo ficticio para forzar la expansión
         nodos_rutas[nodo] = path
         return nodo
 
@@ -39,7 +42,7 @@ def mostrar_arbol_directorios(root, carpeta):
                 tree.delete(hijo)
             for p in sorted(os.listdir(path)):
                 abspath = os.path.join(path, p)
-                if not p.startswith('.'):
+                if not p.startswith('.') and p != "__pycache__":  # Omitir directorios que no deseamos mostrar
                     insertar_nodo(nodo, p, abspath)
 
     root_nodo = insertar_nodo('', carpeta, carpeta)
