@@ -1,11 +1,13 @@
-from app.utils.directory_structure import seleccionar_carpeta, estructura_de_carpetas
-
-import re
-from colorama import Fore, Back, Style
-import tkinter as tk
-from tkinter import messagebox
 import os
 
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
+
+from colorama import Fore, Back, Style
+
+from app.utils.project_data import seleccionar_carpeta, estructura_de_carpetas
+from app.utils.handle_prompt import crea_prompt
 
 def main():
     directorio_script = os.path.dirname(os.path.abspath(__file__))
@@ -13,8 +15,7 @@ def main():
     
     carpeta = seleccionar_carpeta()
     if carpeta:
-        estructura = ""
-        
+        estructura = ""        
         estructura = estructura_de_carpetas(carpeta)        
         
         if estructura:
@@ -22,25 +23,21 @@ def main():
             print(Fore.RED + prompt_gpt + Fore.RESET)
             copiar_al_portapapeles(prompt_gpt)            
 
-    
+
+def seleccionar_carpeta():
+    root = tk.Tk()
+    root.withdraw()  # Ocultamos la ventana principal de Tkinter
+    carpeta_seleccionada = filedialog.askdirectory()  # Abrimos el diálogo para seleccionar carpeta
+    return carpeta_seleccionada    
 
 def copiar_al_portapapeles(texto):
     root = tk.Tk()
-    # Esconde la ventana principal
     root.withdraw()
     root.clipboard_clear()                      # Limpia el portapapeles
     root.clipboard_append(texto)                # Añade el texto al portapapeles
     root.update()                               # Mantiene el portapapeles después de cerrar la ventana
     messagebox.showinfo("Prompt Assistant", "Prompt copiado al portapapeles.")
     root.destroy()                              # Cierra la ventana después de mostrar el mensaje
-
-def crea_prompt(ruta_archivo, estructura_de_carpetas):
-    with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
-        contenido = archivo.read()
-    
-    contenido_modificado = re.sub(r"(''')", lambda m: f"{m.group(1)}\n{estructura_de_carpetas}\n", contenido, count=1)
-    
-    return contenido_modificado
 
 if __name__ == "__main__":
     main()
