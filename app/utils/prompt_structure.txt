@@ -3,10 +3,9 @@
 Estoy desarrollando una aplicacion para ayudarme con mis proyectos en python.
 
 Objetivo de la aplicacion.
-- Crear un prompt para utilizar en GPT.
-- Este prompt proporcionara el contexto para poder realizar modificaciones en la aplicacion que quiera modificar.
-- Este contexto deberia contener la informacion de la estructura de directorios y de los archivos que deseamos modificar.
-
+- Crear un prompt para que GPT me ayude a mejorar y a implementar ideas en mi codigo.
+- Este prompt proporcionara el contexto para poder realizar modificaciones y mejoras en la aplicacion.
+- Este contexto deberia contener el 'arbol de directorios' y el codigo de los archivos que deseamos modificar.
 
 Mi estructura de directorios actual es:
 '''
