@@ -6,12 +6,12 @@ from tkinter import messagebox
 
 from colorama import Fore, Back, Style
 
-from app.utils.project_data import seleccionar_carpeta, estructura_de_carpetas
+from app.utils.project_data import estructura_de_carpetas
 from app.utils.handle_prompt import crea_prompt
 
 def main():
     directorio_script = os.path.dirname(os.path.abspath(__file__))
-    path_prompt_base_txt = os.path.join(directorio_script, 'utils', 'prompt_Python_Helper_GPT.txt')
+    path_prompt_base_txt = os.path.join(directorio_script, 'utils', 'prompt_structure.txt')
     
     carpeta = seleccionar_carpeta()
     if carpeta:
