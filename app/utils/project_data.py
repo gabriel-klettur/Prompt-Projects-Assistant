@@ -1,12 +1,4 @@
 import os
-import tkinter as tk
-from tkinter import filedialog
-
-def seleccionar_carpeta():
-    root = tk.Tk()
-    root.withdraw()  # Ocultamos la ventana principal de Tkinter
-    carpeta_seleccionada = filedialog.askdirectory()  # Abrimos el diálogo para seleccionar carpeta
-    return carpeta_seleccionada
 
 def estructura_de_carpetas(directorio, prefijo=''):
     resultado = ''  # Variable para acumular la estructura de las carpetas
@@ -21,7 +13,3 @@ def estructura_de_carpetas(directorio, prefijo=''):
                 resultado += f"{prefijo}- {entrada.name}\n"  # Añade el nombre del archivo al resultado
     return resultado
 
-if __name__ == "__main__":
-    carpeta = seleccionar_carpeta()
-    if carpeta:
-        estructura_de_carpetas(carpeta)
