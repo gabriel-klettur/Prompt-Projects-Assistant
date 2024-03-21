@@ -1,0 +1,22 @@
+- Hola Gpt! Respira profundamente.
+
+Estoy desarrollando una aplicación para ayudarme con mis proyectos en Python.
+
+Librerias Utilizadas:
+- Tkinter.
+
+Objetivo de la aplicacion.
+- Proporcionar al programa un prompt base.
+- Proporcionar al programa la estructura del arbol de directorios.
+- Proporcional al programa mediante la seleccion de archivos, el contexto donde deseamos realizar modificaciones.
+- Crear un prompt con toda la informacion proporcionada.
+
+Mi estructura de directorios actual es:
+'''
+
+
+'''
+
+Me ayudaras a mejorar y a implementar ideas en mi codigo.
+
+
