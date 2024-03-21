@@ -49,6 +49,16 @@ def copiar_al_portapapeles(root, texto):
 #!--------------------------------------------------------------------------------------------------------------------
 
 def crear_ventana_arbol_directorios(root):
+    """
+    Crea y devuelve una nueva ventana para seleccionar archivos del árbol de directorios.
+
+    Args:
+        root: La ventana raíz a la que se asociará la nueva ventana.
+
+    Returns:
+        La nueva ventana creada.
+
+    """
     ventana = tk.Toplevel(root)
     ventana.title("Seleccionar Archivos del Árbol de Directorios")
     ancho_ventana, alto_ventana = 800, 600
@@ -57,11 +67,32 @@ def crear_ventana_arbol_directorios(root):
     return ventana
 
 def centro_ventana(ventana, ancho_ventana, alto_ventana):
+    """
+    Centers a window on the screen.
+
+    Args:
+        ventana: The window to be centered.
+        ancho_ventana: The width of the window.
+        alto_ventana: The height of the window.
+    """
     posicion_x = (ventana.winfo_screenwidth() // 2) - (ancho_ventana // 2)
     posicion_y = (ventana.winfo_screenheight() // 2) - (alto_ventana // 2)
     ventana.geometry(f"+{posicion_x}+{posicion_y}")
 
 def insertar_nodo(tree, padre, texto, path, nodos_rutas):
+    """
+    Inserts a node into a treeview widget.
+
+    Args:
+        tree (ttk.Treeview): The treeview widget.
+        padre (str): The parent node identifier.
+        texto (str): The text to display for the new node.
+        path (str): The path associated with the new node.
+        nodos_rutas (dict): A dictionary to store the mapping between nodes and paths.
+
+    Returns:
+        str: The identifier of the newly inserted node.
+    """
     if os.path.isdir(path) and texto in ["__pycache__", "venv"]:
         return None
     nodo = tree.insert(padre, 'end', text=texto, open=False)
@@ -71,6 +102,17 @@ def insertar_nodo(tree, padre, texto, path, nodos_rutas):
     return nodo
 
 def cargar_arbol(tree, nodo, nodos_rutas):
+    """
+    Load the treeview with child nodes for the given parent node.
+
+    Args:
+        tree (TreeView): The treeview widget.
+        nodo (str): The parent node.
+        nodos_rutas (dict): A dictionary mapping nodes to their corresponding paths.
+
+    Returns:
+        None
+    """
     path = nodos_rutas.get(nodo)
     if path and os.path.isdir(path):
         for hijo in tree.get_children(nodo):
@@ -81,15 +123,47 @@ def cargar_arbol(tree, nodo, nodos_rutas):
                 insertar_nodo(tree, nodo, p, abspath, nodos_rutas)
 
 def preparar_arbol(tree, carpeta, nodos_rutas):
+    """
+    Prepara el árbol de visualización con los nodos y rutas proporcionados.
+
+    Args:
+        tree (tkinter.ttk.Treeview): El objeto Treeview en el que se mostrará el árbol.
+        carpeta (str): El nombre de la carpeta raíz del árbol.
+        nodos_rutas (dict): Un diccionario que contiene los nodos y rutas del árbol.
+
+    Returns:
+        None
+    """
     root_nodo = insertar_nodo(tree, '', carpeta, carpeta, nodos_rutas)
     cargar_arbol(tree, root_nodo, nodos_rutas)
     tree.bind('<<TreeviewOpen>>', lambda event: on_open(event, tree, nodos_rutas))
 
 def on_open(event, tree, nodos_rutas):
+    """
+    Event handler for the 'open' event.
+
+    Args:
+        event: The event object triggered by the 'open' event.
+        tree: The tree widget object.
+        nodos_rutas: The list of nodes and paths.
+
+    Returns:
+        None
+    """
     nodo = tree.focus()
     cargar_arbol(tree, nodo, nodos_rutas)
 
 def mostrar_arbol_directorios(root, carpeta):
+    """
+    Displays a directory tree in a GUI window and allows the user to select files.
+
+    Args:
+        root: The root Tkinter object.
+        carpeta: The path of the folder to display in the tree.
+
+    Returns:
+        A list of selected files.
+    """
     ventana = crear_ventana_arbol_directorios(root)
     archivos_seleccionados_temp = []
     nodos_rutas = {}
@@ -105,6 +179,18 @@ def mostrar_arbol_directorios(root, carpeta):
     return archivos_seleccionados_temp
 
 def on_confirmar(tree, nodos_rutas, archivos_seleccionados_temp, ventana):
+    """
+    Add selected files to the list of selected files and close the window.
+
+    Parameters:
+    - tree: The tree widget containing the selected files.
+    - nodos_rutas: A dictionary mapping tree nodes to file paths.
+    - archivos_seleccionados_temp: A list to store the selected file paths.
+    - ventana: The window to be closed.
+
+    Returns:
+    None
+    """
     seleccionados = tree.selection()
     for nodo in seleccionados:
         if os.path.isfile(nodos_rutas[nodo]):
