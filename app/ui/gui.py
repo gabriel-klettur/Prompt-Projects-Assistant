@@ -44,71 +44,69 @@ def copiar_al_portapapeles(root, texto):
     root.update()
     messagebox.showinfo("Prompt Assistant", "Prompt copiado al portapapeles.", parent=root)
 
-def mostrar_arbol_directorios(root, carpeta):
+#!--------------------------------------------------------------------------------------------------------------------
+#!------------------------------------------- Ventana Arbol de Directorios -------------------------------------------
+#!--------------------------------------------------------------------------------------------------------------------
+
+def crear_ventana_arbol_directorios(root):
     ventana = tk.Toplevel(root)
     ventana.title("Seleccionar Archivos del Árbol de Directorios")
-    
-    # Ajustar el tamaño de la ventana (p. ej., 800x600).
-    ancho_ventana = 800
-    alto_ventana = 600
+    ancho_ventana, alto_ventana = 800, 600
     ventana.geometry(f"{ancho_ventana}x{alto_ventana}")
+    centro_ventana(ventana, ancho_ventana, alto_ventana)
+    return ventana
 
-    # Calcular la posición x y y para centrar la ventana.
+def centro_ventana(ventana, ancho_ventana, alto_ventana):
     posicion_x = (ventana.winfo_screenwidth() // 2) - (ancho_ventana // 2)
     posicion_y = (ventana.winfo_screenheight() // 2) - (alto_ventana // 2)
-    
-    # Actualizar la geometría de la ventana para que aparezca centrada.
     ventana.geometry(f"+{posicion_x}+{posicion_y}")
-    
-    archivos_seleccionados_temp = []  # Lista temporal para almacenar los archivos seleccionados
-    
-    tree = ttk.Treeview(ventana, selectmode='extended')
-    tree.pack(expand=True, fill='both')
-    
+
+def insertar_nodo(tree, padre, texto, path, nodos_rutas):
+    if os.path.isdir(path) and texto in ["__pycache__", "venv"]:
+        return None
+    nodo = tree.insert(padre, 'end', text=texto, open=False)
+    if os.path.isdir(path):
+        tree.insert(nodo, 'end')
+    nodos_rutas[nodo] = path
+    return nodo
+
+def cargar_arbol(tree, nodo, nodos_rutas):
+    path = nodos_rutas.get(nodo)
+    if path and os.path.isdir(path):
+        for hijo in tree.get_children(nodo):
+            tree.delete(hijo)
+        for p in sorted(os.listdir(path)):
+            if not p.startswith('.') and p not in ["__pycache__", "venv"]:
+                abspath = os.path.join(path, p)
+                insertar_nodo(tree, nodo, p, abspath, nodos_rutas)
+
+def preparar_arbol(tree, carpeta, nodos_rutas):
+    root_nodo = insertar_nodo(tree, '', carpeta, carpeta, nodos_rutas)
+    cargar_arbol(tree, root_nodo, nodos_rutas)
+    tree.bind('<<TreeviewOpen>>', lambda event: on_open(event, tree, nodos_rutas))
+
+def on_open(event, tree, nodos_rutas):
+    nodo = tree.focus()
+    cargar_arbol(tree, nodo, nodos_rutas)
+
+def mostrar_arbol_directorios(root, carpeta):
+    ventana = crear_ventana_arbol_directorios(root)
+    archivos_seleccionados_temp = []
     nodos_rutas = {}
 
-    def insertar_nodo(padre, texto, path):
-        # Omitir la inserción si el directorio es __pycache__
-        if os.path.isdir(path) and (texto == "__pycache__" or texto == "venv"):
-            return None  # No se crea un nodo para __pycache__
-        nodo = tree.insert(padre, 'end', text=texto, open=False)
-        if os.path.isdir(path):
-            tree.insert(nodo, 'end')  # Insertar un nodo ficticio para forzar la expansión
-        nodos_rutas[nodo] = path
-        return nodo
+    tree = ttk.Treeview(ventana, selectmode='extended')
+    tree.pack(expand=True, fill='both')
+    preparar_arbol(tree, carpeta, nodos_rutas)
 
-    def cargar_arbol(nodo):
-        path = nodos_rutas.get(nodo)
-        if path and os.path.isdir(path):
-            for hijo in tree.get_children(nodo):
-                tree.delete(hijo)
-            for p in sorted(os.listdir(path)):
-                abspath = os.path.join(path, p)
-                if not p.startswith('.') and p != "__pycache__" and p != "venv":  # Omitir directorios que no deseamos mostrar
-                    insertar_nodo(nodo, p, abspath)
-
-    root_nodo = insertar_nodo('', carpeta, carpeta)
-    cargar_arbol(root_nodo)
-
-    def on_open(event):
-        nodo = tree.focus()
-        cargar_arbol(nodo)
-
-    tree.bind('<<TreeviewOpen>>', on_open)
-
-    def confirmar_seleccion():
-        seleccionados = tree.selection()
-        for nodo in seleccionados:
-            if os.path.isfile(nodos_rutas[nodo]):
-                archivos_seleccionados_temp.append(nodos_rutas[nodo])
-
-    def on_confirmar():
-        confirmar_seleccion()  # Captura los archivos seleccionados
-        ventana.destroy()
-
-    btn_confirmar = tk.Button(ventana, text="Confirmar Selección", command=on_confirmar)
+    btn_confirmar = tk.Button(ventana, text="Confirmar Selección", command=lambda: on_confirmar(tree, nodos_rutas, archivos_seleccionados_temp, ventana))
     btn_confirmar.pack(pady=10)
 
-    ventana.wait_window()  # Espera que la ventana se cierre antes de continuar
+    ventana.wait_window()
+    return archivos_seleccionados_temp
 
-    return archivos_seleccionados_temp  # Retorna la lista de archivos seleccionados
+def on_confirmar(tree, nodos_rutas, archivos_seleccionados_temp, ventana):
+    seleccionados = tree.selection()
+    for nodo in seleccionados:
+        if os.path.isfile(nodos_rutas[nodo]):
+            archivos_seleccionados_temp.append(nodos_rutas[nodo])
+    ventana.destroy()
