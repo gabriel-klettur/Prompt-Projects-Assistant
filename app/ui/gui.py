@@ -5,11 +5,40 @@ from tkinter import ttk
 
 import os
 
-def seleccionar_carpeta(root):    
+def seleccionar_archivo(root):
+    """
+    Permite al usuario seleccionar un archivo mediante un cuadro de diálogo.
+
+    Args:
+        root: La raíz de la ventana de Tkinter.
+
+    Returns:
+        La ruta del archivo seleccionado o None si no se selecciona ningún archivo.
+    """
+    archivo_seleccionado = filedialog.askopenfilename(parent=root, title="Seleccionar archivo de prompt base")
+    return archivo_seleccionado
+
+def seleccionar_carpeta(root):
+    """
+    Opens a dialog box to select a folder/directory.
+
+    Parameters:
+        root (Tk): The root window object.
+
+    Returns:
+        str: The path of the selected folder/directory.
+    """
     carpeta_seleccionada = filedialog.askdirectory(parent=root)  # Usamos 'root' como parent.
     return carpeta_seleccionada
 
 def copiar_al_portapapeles(root, texto):
+    """
+    Copies the given text to the clipboard.
+
+    Args:
+        root (Tk): The root Tkinter window.
+        texto (str): The text to be copied to the clipboard.
+    """
     root.clipboard_clear()
     root.clipboard_append(texto)
     root.update()
