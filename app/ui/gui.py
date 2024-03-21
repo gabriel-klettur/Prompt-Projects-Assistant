@@ -3,6 +3,8 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
 
+from pathlib import Path
+
 import os
 
 def seleccionar_archivo(root):
@@ -80,15 +82,11 @@ def centro_ventana(ventana, ancho_ventana, alto_ventana):
     ventana.geometry(f"+{posicion_x}+{posicion_y}")
 
 def insertar_nodo(tree, padre, texto, path, nodos_rutas):
-    """
-    Inserta un nodo en el widget de Treeview, diferenciando entre directorios y archivos.
-    """
+    path = Path(path)  # Convierte la ruta a un objeto Path
     nodo = tree.insert(padre, 'end', text=texto, open=False)
-    nodos_rutas[nodo] = path
-    # Si es un directorio, intentamos cargar sus hijos directamente.
-    if os.path.isdir(path):
-        # Insertamos un nodo ficticio para asegurarnos de que se pueda expandir.
-        tree.insert(nodo, 'end')
+    nodos_rutas[nodo] = str(path)  # Almacena la ruta como cadena para mantener la consistencia
+    if path.is_dir():
+        tree.insert(nodo, 'end')  # El resto del código permanece igual
     return nodo
 
 def expandir_todo(tree, nodo, nodos_rutas):
