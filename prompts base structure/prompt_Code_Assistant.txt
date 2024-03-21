@@ -10,6 +10,7 @@ Objetivo de la aplicacion.
 - Proporcionar al programa la estructura del arbol de directorios.
 - Proporcional al programa mediante la seleccion de archivos, el contexto donde deseamos realizar modificaciones.
 - Crear un prompt con toda la informacion proporcionada.
+- Pegar este prompt en mi Asistente especifico en ChatGPT.
 
 Mi estructura de directorios actual es:
 '''
