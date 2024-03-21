@@ -81,46 +81,58 @@ def centro_ventana(ventana, ancho_ventana, alto_ventana):
 
 def insertar_nodo(tree, padre, texto, path, nodos_rutas):
     """
-    Inserts a node into a treeview widget.
+    Inserta un nodo en el widget de Treeview, diferenciando entre directorios y archivos.
+    """
+    nodo = tree.insert(padre, 'end', text=texto, open=False)
+    nodos_rutas[nodo] = path
+    # Si es un directorio, intentamos cargar sus hijos directamente.
+    if os.path.isdir(path):
+        # Insertamos un nodo ficticio para asegurarnos de que se pueda expandir.
+        tree.insert(nodo, 'end')
+    return nodo
+
+def expandir_todo(tree, nodo, nodos_rutas):
+    """
+    Expande recursivamente todos los nodos hijos del nodo dado.
 
     Args:
-        tree (ttk.Treeview): The treeview widget.
-        padre (str): The parent node identifier.
-        texto (str): The text to display for the new node.
-        path (str): The path associated with the new node.
-        nodos_rutas (dict): A dictionary to store the mapping between nodes and paths.
-
-    Returns:
-        str: The identifier of the newly inserted node.
+        tree (ttk.Treeview): El widget de Treeview.
+        nodo (str): El identificador del nodo padre.
+        nodos_rutas (dict): Un diccionario que mapea identificadores de nodos a sus rutas de archivos/directorios.
     """
-    if os.path.isdir(path) and texto in ["__pycache__", "venv"]:
-        return None
-    nodo = tree.insert(padre, 'end', text=texto, open=False)
-    if os.path.isdir(path):
-        tree.insert(nodo, 'end')
-    nodos_rutas[nodo] = path
-    return nodo
+    tree.item(nodo, open=True)  # Expande el nodo actual.
+    path = nodos_rutas.get(nodo)
+    if path and os.path.isdir(path):
+        for hijo in tree.get_children(nodo):
+            expandir_todo(tree, hijo, nodos_rutas)  # Llamada recursiva para expandir los nodos hijos.
 
 def cargar_arbol(tree, nodo, nodos_rutas):
     """
-    Load the treeview with child nodes for the given parent node.
+    Carga el contenido de un directorio en un árbol de tkinter.
 
     Args:
-        tree (TreeView): The treeview widget.
-        nodo (str): The parent node.
-        nodos_rutas (dict): A dictionary mapping nodes to their corresponding paths.
+        tree (tkinter.ttk.Treeview): El árbol de tkinter en el que se cargará el contenido.
+        nodo (str): El nodo del árbol en el que se cargará el contenido.
+        nodos_rutas (dict): Un diccionario que mapea nodos del árbol a rutas de directorio.
 
     Returns:
         None
     """
-    path = nodos_rutas.get(nodo)
+    path = nodos_rutas.get(nodo, '')
     if path and os.path.isdir(path):
         for hijo in tree.get_children(nodo):
             tree.delete(hijo)
-        for p in sorted(os.listdir(path)):
-            if not p.startswith('.') and p not in ["__pycache__", "venv"]:
-                abspath = os.path.join(path, p)
-                insertar_nodo(tree, nodo, p, abspath, nodos_rutas)
+        
+        elementos = sorted(os.listdir(path), key=lambda e: (not os.path.isdir(os.path.join(path, e)), e))
+        for elemento in elementos:
+            if elemento.startswith('.') or elemento in ["__pycache__", "venv"]:
+                continue
+            abspath = os.path.join(path, elemento)
+            hijo = insertar_nodo(tree, nodo, elemento, abspath, nodos_rutas)
+            if os.path.isdir(abspath):
+                # Insertamos un nodo ficticio para asegurar que se puede expandir,
+                # y cargamos recursivamente su contenido para asegurar que los archivos sean visibles.
+                cargar_arbol(tree, hijo, nodos_rutas)  # Carga recursiva de contenido.
 
 def preparar_arbol(tree, carpeta, nodos_rutas):
     """
@@ -136,6 +148,7 @@ def preparar_arbol(tree, carpeta, nodos_rutas):
     """
     root_nodo = insertar_nodo(tree, '', carpeta, carpeta, nodos_rutas)
     cargar_arbol(tree, root_nodo, nodos_rutas)
+    expandir_todo(tree, root_nodo, nodos_rutas)
     tree.bind('<<TreeviewOpen>>', lambda event: on_open(event, tree, nodos_rutas))
 
 def on_open(event, tree, nodos_rutas):
