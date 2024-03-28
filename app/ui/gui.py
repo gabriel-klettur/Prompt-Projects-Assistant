@@ -7,6 +7,8 @@ from pathlib import Path
 
 import os
 
+from config import FOLDERS_TO_IGNORE
+
 def seleccionar_archivo(root):
     """
     Permite al usuario seleccionar un archivo mediante un cuadro de diálogo.
@@ -123,7 +125,7 @@ def cargar_arbol(tree, nodo, nodos_rutas):
         
         elementos = sorted(os.listdir(path), key=lambda e: (not os.path.isdir(os.path.join(path, e)), e))
         for elemento in elementos:
-            if elemento.startswith('.') or elemento in ["__pycache__", "venv"]:
+            if elemento.startswith('.') or elemento in FOLDERS_TO_IGNORE:
                 continue
             abspath = os.path.join(path, elemento)
             hijo = insertar_nodo(tree, nodo, elemento, abspath, nodos_rutas)
