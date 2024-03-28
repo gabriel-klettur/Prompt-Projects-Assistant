@@ -8,6 +8,12 @@ from app.utils.handle_prompt import crea_prompt
 from app.ui.gui import seleccionar_carpeta, copiar_al_portapapeles, mostrar_arbol_directorios, seleccionar_archivo
 
 def main():
+    """
+    Main function of the PromptCodeAssistant application.
+    This function initializes the Tkinter instance, prompts the user to select a base prompt file and a folder,
+    displays the directory tree of the selected folder, generates the content of selected files,
+    creates a GPT prompt based on the selected files and folder structure, and copies the prompt to the clipboard.
+    """
     # Inicializar la instancia principal de Tkinter.
     root = tk.Tk()
     root.withdraw()  # Ocultamos la ventana principal.
