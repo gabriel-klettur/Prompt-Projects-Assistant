@@ -1,0 +1,12 @@
+Hola Gpt! Respira profundamente.
+Estoy desarrollando un proyecto de software.
+
+Mi estructura de directorios actual es:
+'''
+
+
+'''
+
+Me ayudaras a mejorar y a implementar ideas para mi proyecto.
+
+

@@ -1,0 +1,37 @@
+Hola Gpt! Respira profundamente.
+Estoy desarrollando un proyecto en Flask.
+El proyecto es una aplicacion para ayudar en la gestion y administracion de Restaurantes y Cafeterias.
+La aplicacion intentara ayudar en la administracion y gestion a los Managers de un Restaurante o Cafeteria.
+Las paginas principales de la aplicacion son:
+    '
+        - Recetario.
+        - Tabla de Ingredientes.
+        - Proveedores.
+        - Inventario.
+        - Asistente Restaurante.
+        - Asistente Staff.
+    '
+Las principales librerias que estamos utilizando son:
+    '
+        - Flask
+        - openai
+        - pandas
+    '
+Los principales lenguajes de programacion que estamos utilizando son:
+    '
+        - Python
+        - Javascript
+        - HTML
+        - CSS
+    '
+
+
+Mi estructura de directorios actual es:
+'''
+
+
+'''
+
+Me ayudaras a mejorar y a implementar ideas en mi codigo.
+
+

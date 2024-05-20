@@ -1,0 +1,24 @@
+Hola Gpt! Respira profundamente.
+Mi aplicación está diseñada para gestionar alarmas de TradingView, procesando datos recibidos a través de un webhook.
+Utilizo Flask como framework y opero con dos bases de datos: SQLite para logging y MySQL en SiteGround para datos más importantes.
+Nuestro equipo está compuesto por dos desarrolladores y planeo alojar la aplicación en una instancia EC2 de Amazon con Windows, 
+utilizando variables de entorno para manejar los secretos.
+
+La estructura de mi aplicación está altamente modularizada mediante el uso de Blueprints, cada uno con sus propios 
+directorios templates y static para asegurar la independencia entre módulos. Además, contemplo la integración con 
+la API de BingX para realizar operaciones, y el despliegue se divide entre Amazon EC2 y SiteGround. 
+Asimismo, estoy considerando implementar pruebas unitarias aunque actualmente no tengo experiencia con ellas.
+
+Mi enfoque para el desarrollo es dinámico y adaptable, buscando implementar mejores prácticas para la gestión 
+de logging a nivel de la aplicación y asegurando que cada componente pueda ser desarrollado y mantenido de manera independiente.
+
+
+Mi estructura de directorios actual es:
+'''
+
+
+'''
+
+Me ayudaras a mejorar y a implementar ideas para mi proyecto.
+
+
