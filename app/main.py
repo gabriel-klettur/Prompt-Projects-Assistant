@@ -3,9 +3,9 @@ import tkinter as tk
 
 from colorama import Fore
 
-from app.utils.project_data import estructura_de_carpetas, generar_contenido_archivos
-from app.utils.handle_prompt import crea_prompt
-from app.ui.gui import seleccionar_carpeta, copiar_al_portapapeles, mostrar_arbol_directorios, seleccionar_archivo
+from app.utils import genera_estructura_de_carpetas, extrae_contenido_archivos
+from app.utils import crea_prompt
+from app.ui import seleccionar_carpeta, copiar_al_portapapeles, mostrar_arbol_directorios, seleccionar_archivo
 
 def main():
     """
@@ -28,11 +28,11 @@ def main():
         print("No se seleccionó la carpeta. Terminando el programa.")
         return
         
-    estructura = estructura_de_carpetas(carpeta)    
+    estructura = genera_estructura_de_carpetas(carpeta)    
     archivos_seleccionados = mostrar_arbol_directorios(root, carpeta)  # Ahora captura los archivos seleccionados aquí
     
     if archivos_seleccionados:
-        contenido_archivos = generar_contenido_archivos(archivos_seleccionados)        
+        contenido_archivos = extrae_contenido_archivos(archivos_seleccionados)        
         prompt_gpt = crea_prompt(path_prompt_base_txt, estructura, contenido_archivos)
         print(Fore.RED + prompt_gpt + Fore.RESET)
         copiar_al_portapapeles(root, prompt_gpt)
