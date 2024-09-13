@@ -29,16 +29,20 @@ def seleccionar_ruta(root, tipo="archivo"):
 
 def copiar_al_portapapeles(root, texto):
     """
-    Copies the given text to the clipboard.
+    Copia el texto dado al portapapeles y maneja errores de forma segura.
 
     Args:
-        root (Tk): The root Tkinter window.
-        texto (str): The text to be copied to the clipboard.
+        root (Tk): La ventana raíz de Tkinter.
+        texto (str): El texto a copiar al portapapeles.
     """
-    root.clipboard_clear()
-    root.clipboard_append(texto)
-    root.update()
-    messagebox.showinfo("Prompt Assistant", "Prompt copiado al portapapeles.", parent=root)
+    try:
+        root.clipboard_clear()
+        root.clipboard_append(texto)
+        root.update()
+        messagebox.showinfo("Prompt Assistant", "Prompt copiado al portapapeles.", parent=root)
+    except Exception as e:
+        messagebox.showerror("Error", f"Error copiando al portapapeles: {str(e)}")
+
 
 #!--------------------------------------------------------------------------------------------------------------------
 #!------------------------------------------- Ventana Arbol de Directorios -------------------------------------------
