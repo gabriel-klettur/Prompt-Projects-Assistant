@@ -3,8 +3,8 @@ import tkinter as tk
 
 from colorama import Fore
 
-from app.utils import genera_estructura_de_carpetas, extrae_contenido_archivos, crea_prompt
-from app.ui import seleccionar_ruta, copiar_al_portapapeles, mostrar_arbol_directorios
+from src.utils import genera_estructura_de_carpetas, extrae_contenido_archivos, crea_prompt
+from src.ui import seleccionar_ruta, copiar_al_portapapeles, mostrar_arbol_directorios
 
 def main():
     """

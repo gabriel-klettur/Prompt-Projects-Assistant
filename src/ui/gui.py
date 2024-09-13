@@ -7,7 +7,7 @@ from pathlib import Path
 
 import os
 
-from config import FOLDERS_TO_IGNORE
+from src.config import FOLDERS_TO_IGNORE
 
 def seleccionar_ruta(root, tipo="archivo"):
     """

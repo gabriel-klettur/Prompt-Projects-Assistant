@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from config import FOLDERS_TO_IGNORE
+from src.config import FOLDERS_TO_IGNORE
 
 def genera_estructura_de_carpetas(directorio, prefijo=''):
     """
