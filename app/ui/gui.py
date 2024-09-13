@@ -19,8 +19,9 @@ def seleccionar_archivo(root):
     Returns:
         La ruta del archivo seleccionado o None si no se selecciona ningún archivo.
     """
-    archivo_seleccionado = filedialog.askopenfilename(parent=root, title="Seleccionar archivo de prompt base")
-    return archivo_seleccionado
+    ruta_archivo_seleccionado = filedialog.askopenfilename(parent=root, title="Seleccionar archivo de prompt base")
+    
+    return ruta_archivo_seleccionado
 
 def seleccionar_carpeta(root):
     """
