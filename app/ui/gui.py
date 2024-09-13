@@ -9,32 +9,23 @@ import os
 
 from config import FOLDERS_TO_IGNORE
 
-def seleccionar_archivo(root):
+def seleccionar_ruta(root, tipo="archivo"):
     """
-    Permite al usuario seleccionar un archivo mediante un cuadro de diálogo.
+    Permite al usuario seleccionar un archivo o carpeta mediante un cuadro de diálogo.
 
     Args:
         root: La raíz de la ventana de Tkinter.
+        tipo: Tipo de selección ("archivo" o "carpeta").
 
     Returns:
-        La ruta del archivo seleccionado o None si no se selecciona ningún archivo.
+        La ruta seleccionada o None si no se selecciona nada.
     """
-    ruta_archivo_seleccionado = filedialog.askopenfilename(parent=root, title="Seleccionar archivo de prompt base")
+    if tipo == "archivo":
+        ruta_seleccionada = filedialog.askopenfilename(parent=root, title="Seleccionar archivo")
+    elif tipo == "carpeta":
+        ruta_seleccionada = filedialog.askdirectory(parent=root, title="Seleccionar carpeta")
     
-    return ruta_archivo_seleccionado
-
-def seleccionar_carpeta(root):
-    """
-    Opens a dialog box to select a folder/directory.
-
-    Parameters:
-        root (Tk): The root window object.
-
-    Returns:
-        str: The path of the selected folder/directory.
-    """
-    carpeta_seleccionada = filedialog.askdirectory(parent=root)  # Usamos 'root' como parent.
-    return carpeta_seleccionada
+    return ruta_seleccionada
 
 def copiar_al_portapapeles(root, texto):
     """

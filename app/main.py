@@ -5,7 +5,7 @@ from colorama import Fore
 
 from app.utils import genera_estructura_de_carpetas, extrae_contenido_archivos
 from app.utils import crea_prompt
-from app.ui import seleccionar_carpeta, copiar_al_portapapeles, mostrar_arbol_directorios, seleccionar_archivo
+from app.ui import seleccionar_ruta, copiar_al_portapapeles, mostrar_arbol_directorios
 
 def main():
     """
@@ -18,12 +18,12 @@ def main():
     root = tk.Tk()
     root.withdraw()  # Ocultamos la ventana principal.
 
-    path_prompt_base_txt = seleccionar_archivo(root)
+    path_prompt_base_txt = seleccionar_ruta(root, tipo="archivo")
     if not path_prompt_base_txt:
         print("No se seleccionó el archivo de prompt base. Terminando el programa.")
         return
 
-    carpeta = seleccionar_carpeta(root)
+    carpeta = seleccionar_ruta(root, tipo="carpeta")
     if not carpeta:
         print("No se seleccionó la carpeta. Terminando el programa.")
         return
