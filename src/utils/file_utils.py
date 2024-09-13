@@ -12,9 +12,12 @@ def extrae_contenido_archivos(archivos):
     """
     contenido_archivos = ""
     for archivo in archivos:
-        with open(archivo, 'r', encoding='utf-8') as f:
-            contenido = f.read()
-            contenido_archivos += f"------------------------------------------------------------------------------------------------------------------------------------"
-            contenido_archivos += f"\n El archivo: {os.path.basename(archivo)}, Contiene:\n'''\n{contenido}\n'''\n"
-            contenido_archivos += f"------------------------------------------------------------------------------------------------------------------------------------\n"
+        try:
+            with open(archivo, 'r', encoding='utf-8') as f:
+                contenido = f.read()
+                contenido_archivos += f"------------------------------------------------------------------------------------------------------------------------------------"
+                contenido_archivos += f"\n El archivo: {os.path.basename(archivo)}, Contiene:\n'''\n{contenido}\n'''\n"
+                contenido_archivos += f"------------------------------------------------------------------------------------------------------------------------------------\n"
+        except Exception as e:
+            print(f"Error al leer el archivo {archivo}: {e}")
     return contenido_archivos
