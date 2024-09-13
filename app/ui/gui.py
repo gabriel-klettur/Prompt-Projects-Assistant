@@ -104,7 +104,7 @@ def expandir_todo(tree, nodo, nodos_rutas):
 
 def cargar_arbol(tree, nodo, nodos_rutas):
     """
-    Carga el contenido de un directorio en un árbol de tkinter.
+    Carga el contenido de un directorio en un árbol de tkinter usando os.scandir para mayor eficiencia.
 
     Args:
         tree (tkinter.ttk.Treeview): El árbol de tkinter en el que se cargará el contenido.
@@ -119,16 +119,16 @@ def cargar_arbol(tree, nodo, nodos_rutas):
         for hijo in tree.get_children(nodo):
             tree.delete(hijo)
         
-        elementos = sorted(os.listdir(path), key=lambda e: (not os.path.isdir(os.path.join(path, e)), e))
-        for elemento in elementos:
-            if elemento.startswith('.') or elemento in FOLDERS_TO_IGNORE:
-                continue
-            abspath = os.path.join(path, elemento)
-            hijo = insertar_nodo(tree, nodo, elemento, abspath, nodos_rutas)
-            if os.path.isdir(abspath):
-                # Insertamos un nodo ficticio para asegurar que se puede expandir,
-                # y cargamos recursivamente su contenido para asegurar que los archivos sean visibles.
-                cargar_arbol(tree, hijo, nodos_rutas)  # Carga recursiva de contenido.
+        with os.scandir(path) as it:
+            elementos = sorted(it, key=lambda e: (not e.is_dir(), e.name))
+            for elemento in elementos:
+                if elemento.name.startswith('.') or elemento.name in FOLDERS_TO_IGNORE:
+                    continue
+                abspath = os.path.join(path, elemento.name)
+                hijo = insertar_nodo(tree, nodo, elemento.name, abspath, nodos_rutas)
+                if elemento.is_dir():
+                    cargar_arbol(tree, hijo, nodos_rutas)  # Carga recursiva de contenido.
+
 
 def preparar_arbol(tree, carpeta, nodos_rutas):
     """
