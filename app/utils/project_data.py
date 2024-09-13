@@ -6,7 +6,7 @@ from pathlib import Path
 
 from config import FOLDERS_TO_IGNORE
 
-def estructura_de_carpetas(directorio, prefijo=''):
+def genera_estructura_de_carpetas(directorio, prefijo=''):
     """
     Recursively generates a directory structure representation.
 
@@ -17,21 +17,21 @@ def estructura_de_carpetas(directorio, prefijo=''):
     Returns:
         str: The directory structure representation.
     """
-    directorio = Path(directorio)
+    directorio = Path(directorio)               
     resultado = ''
     for entrada in directorio.iterdir():
         if entrada.is_dir() and not any(entrada.name.startswith(prefix) or entrada.name in FOLDERS_TO_IGNORE for prefix in ['.']):
             resultado += f"{prefijo}+ {entrada.name}\n"
             nuevo_prefijo = prefijo + "|  "
-            resultado += estructura_de_carpetas(entrada, nuevo_prefijo)
+            resultado += genera_estructura_de_carpetas(entrada, nuevo_prefijo)
         elif entrada.is_file():
             resultado += f"{prefijo}- {entrada.name}\n"
     return resultado
 
 
-def generar_contenido_archivos(archivos):
+def extrae_contenido_archivos(archivos):
     """
-    Genera el contenido de los archivos especificados.
+    Extrae el contenido de los archivos especificados.
 
     Args:
         archivos (list): Una lista de rutas de archivos.
