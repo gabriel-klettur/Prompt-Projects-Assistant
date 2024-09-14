@@ -1,5 +1,4 @@
-from .handle_prompt import crea_prompt
-from .file_utils import extrae_contenido_archivos
-from .folder_utils import genera_estructura_de_carpetas
+from .file_manager import FileManager
+from .prompt_generator import PromptGenerator
 
-__all__ = ["crea_prompt", "genera_estructura_de_carpetas", "extrae_contenido_archivos"]
+__all__ = ["PromptGenerator", "FileManager"]

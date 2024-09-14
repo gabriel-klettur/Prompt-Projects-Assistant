@@ -1,3 +1,3 @@
-from .gui import seleccionar_ruta, copiar_al_portapapeles, mostrar_arbol_directorios
+from .prompt_assistant_gui import PromptAssistantGUI
 
-__all__ = ['seleccionar_ruta', 'copiar_al_portapapeles', 'mostrar_arbol_directorios']
+__all__ = ['PromptAssistantGUI']

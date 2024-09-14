@@ -1,42 +1,53 @@
-import os
+# main.py
+
 import tkinter as tk
-
 from colorama import Fore
+from src.config import FOLDERS_TO_IGNORE
 
-from src.utils import genera_estructura_de_carpetas, extrae_contenido_archivos, crea_prompt
-from src.ui import seleccionar_ruta, copiar_al_portapapeles, mostrar_arbol_directorios
+from src.utils import FileManager
+from src.utils import PromptGenerator
+from src.ui import PromptAssistantGUI
+
 
 def main():
-    """
-    Main function of the PromptCodeAssistant application.
-    This function initializes the Tkinter instance, prompts the user to select a base prompt file and a folder,
-    displays the directory tree of the selected folder, generates the content of selected files,
-    creates a GPT prompt based on the selected files and folder structure, and copies the prompt to the clipboard.
-    """
-    # Inicializar la instancia principal de Tkinter.
     root = tk.Tk()
-    root.withdraw()  # Ocultamos la ventana principal.
+    root.withdraw()
 
-    path_prompt_base_txt = seleccionar_ruta(root, tipo="archivo")
+    gui = PromptAssistantGUI(root, FOLDERS_TO_IGNORE)
+    file_manager = FileManager(FOLDERS_TO_IGNORE)
+
+    # Seleccionar el archivo de prompt base
+    path_prompt_base_txt = gui.seleccionar_ruta(tipo="archivo")
     if not path_prompt_base_txt:
         print("No se seleccionó el archivo de prompt base. Terminando el programa.")
         return
 
-    carpeta = seleccionar_ruta(root, tipo="carpeta")
+    # Seleccionar la carpeta
+    carpeta = gui.seleccionar_ruta(tipo="carpeta")
     if not carpeta:
         print("No se seleccionó la carpeta. Terminando el programa.")
         return
-        
-    # Genera y modifica el prompt    
-    estructura = genera_estructura_de_carpetas(carpeta)    
-    
-    archivos_seleccionados = mostrar_arbol_directorios(root, carpeta)  # Ahora captura los archivos seleccionados aquí        
-    contenido_archivos = extrae_contenido_archivos(archivos_seleccionados)        
-    
-    prompt_gpt = crea_prompt(path_prompt_base_txt, estructura, contenido_archivos)
-    print(Fore.RED + prompt_gpt + Fore.RESET)
-    copiar_al_portapapeles(root, prompt_gpt)
-    
+
+    # Crear instancia de PromptGenerator
+    prompt_generator = PromptGenerator(path_prompt_base_txt)
+
+    # Generar la estructura de carpetas
+    estructura = file_manager.genera_estructura_de_carpetas(carpeta)
+    prompt_generator.set_estructura_de_carpetas(estructura)
+
+    # Mostrar árbol de directorios y obtener archivos seleccionados
+    archivos_seleccionados = gui.mostrar_arbol_directorios(carpeta)
+
+    # Extraer contenido de los archivos seleccionados
+    contenido_archivos = file_manager.extrae_contenido_archivos(archivos_seleccionados)
+    prompt_generator.set_contenido_archivos(contenido_archivos)
+
+    # Crear el prompt final
+    prompt_final = prompt_generator.crear_prompt()
+
+    # Mostrar y copiar el prompt
+    print(Fore.RED + prompt_final + Fore.RESET)
+    gui.copiar_al_portapapeles(prompt_final)
 
 if __name__ == "__main__":
     main()
