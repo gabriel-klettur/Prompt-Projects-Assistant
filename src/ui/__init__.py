@@ -1,3 +1,6 @@
-from .prompt_assistant_gui import PromptAssistantGUI
+# ui/__init__.py
 
-__all__ = ['PromptAssistantGUI']
+from .prompt_assistant_gui import PromptAssistantGUI
+from .main_window import MainWindow
+
+__all__ = ["PromptAssistantGUI", "MainWindow"]
