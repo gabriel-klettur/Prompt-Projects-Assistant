@@ -1,20 +1,18 @@
 # Prompt Code Assistant
 
-Prompt Code Assistant es una aplicación diseñada para facilitar la generación de prompts personalizados para tus proyectos , integrándose de manera eficiente con asistentes como ChatGPT.
+**Prompt Code Assistant** is an application designed to simplify the generation of customized prompts for your projects, efficiently integrating with assistants like ChatGPT.
 
-## Características
+## Features
 
-- **Selección interactiva de archivos y carpetas**: Elige fácilmente los archivos y directorios que deseas incluir en tu prompt.
-- **Generación automática de estructura de directorios**: Crea una representación en texto de la estructura de tus carpetas.
-- **Extracción y formateo de contenido de archivos**: Obtén el contenido de los archivos seleccionados y prepáralo para incluirlo en el prompt.
-- **Creación de prompts personalizados**: Combina el prompt base, la estructura de directorios y el contenido de los archivos para generar un prompt completo.
-- **Copiado al portapapeles**: Copia automáticamente el prompt generado al portapapeles para facilitar su uso inmediato.
+- **Interactive File and Folder Selection**: Easily choose the files and directories you want to include in your prompt.  
+- **Automatic Directory Structure Generation**: Create a text representation of your folder structure.  
+- **File Content Extraction and Formatting**: Extract content from selected files and prepare it for inclusion in the prompt.  
+- **Custom Prompt Creation**: Combine the base prompt, directory structure, and file content to generate a complete prompt.  
+- **Clipboard Copy**: Automatically copy the generated prompt to the clipboard for immediate use.  
 
-## Requisitos
+## Requirements
 
 - **Python 3.x**
 
-- **Dependencias de Python**:
-
-  ```plaintext
-  colorama
+### Python Dependencies:
+- `colorama`
