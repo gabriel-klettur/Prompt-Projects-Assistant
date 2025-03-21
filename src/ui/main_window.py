@@ -5,8 +5,8 @@ from tkinter import messagebox
 from tkinter import ttk
 
 from src.ui import PromptAssistantGUI
-from src.utils import FileManager
-from src.utils import PromptGenerator
+from src.core import FileManager
+from src.core import PromptGenerator
 from src.config import FOLDERS_TO_IGNORE
 
 class MainWindow:

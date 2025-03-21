@@ -6,11 +6,13 @@ Librerias Utilizadas:
 - Tkinter.
 
 Objetivo actual de la aplicacion.
-- Proporcionar al programa un prompt base.
-- Proporcionar al programa la estructura del arbol de directorios.
-- Proporcional al programa mediante la seleccion de archivos, el contexto donde deseamos realizar modificaciones.
-- Crear un prompt con toda la informacion proporcionada.
-- Pegar este prompt en mi Asistente especifico en ChatGPT.
+- Crear un prompt que utilice como contexto una informacion basica del proyecto, como el nombre del proyecto, la estructura de directorios y los archivos seleccionados.
+- Para crear el contexto debemos seleccionar un prompt base, seleccionar la carpeta del proyecto y los archivos del proyecto que deseamos agregar al prompt
+
+Luego devemos:
+- Mostrar el prompt en mi Asistente para poder editarlo.
+- Mostrar los archivos seleccionados para agregar al prompt
+- Permitir Copiar el prompt generado al portapapeles.
 
 Se requiere:
 - Modularizar el codigo lo maximo posible.
