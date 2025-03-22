@@ -12,13 +12,11 @@ class MainWindow:
         self.root.title("Prompt Code Assistant")
         self.root.state('zoomed')
         self._center_window(self.root, 500, 500)
-        self.root.minsize(800, 600)  # Ancho mínimo total (3 columnas de 200), alto mínimo 400
+        self.root.minsize(800, 600)
 
-        # Inicializar GUI helper y controlador
         self.gui_helper = PromptAssistantGUI(self.root, FOLDERS_TO_IGNORE)
         self.controller = PromptController(self.gui_helper, self)
 
-        # Inicializar componentes visuales
         self._create_widgets()
 
     def _center_window(self, window, width, height):
@@ -31,6 +29,7 @@ class MainWindow:
         style.theme_use("clam")
         style.configure("TButton", font=("Segoe UI", 10), padding=6)
         style.configure("TLabel", font=("Segoe UI", 10))
+        style.configure("Vertical.TScrollbar", gripcount=0, background="gray", troughcolor="white", bordercolor="gray", arrowcolor="black")
 
         main_paned = tk.PanedWindow(self.root, orient='horizontal', sashrelief='raised', showhandle=True)
         main_paned.pack(fill='both', expand=True)
@@ -66,21 +65,39 @@ class MainWindow:
         main_paned.add(center_frame, minsize=200)
         main_paned.paneconfig(center_frame, stretch="always")
 
-        self.text_prompt_base = tk.Text(center_frame, wrap='word', height=10)
-        self.text_directorio = tk.Text(center_frame, wrap='word', height=10)
-        self.text_archivos = tk.Text(center_frame, wrap='word', height=10)
+        # Prompt Base
+        tk.Label(center_frame, text="Prompt Base:").pack(anchor='w')
+        prompt_base_frame = tk.Frame(center_frame)
+        prompt_base_frame.pack(fill='both', expand=True, pady=(0, 10))
+        self.text_prompt_base = tk.Text(prompt_base_frame, wrap='word', height=10)
+        self.text_prompt_base.pack(side='left', fill='both', expand=True)
+        scrollbar_base = ttk.Scrollbar(prompt_base_frame, orient='vertical', command=self.text_prompt_base.yview)
+        scrollbar_base.pack(side='right', fill='y')
+        self.text_prompt_base.config(yscrollcommand=scrollbar_base.set)
+
+        # Estructura de Carpetas
+        tk.Label(center_frame, text="Estructura de Carpetas:").pack(anchor='w')
+        directorio_frame = tk.Frame(center_frame)
+        directorio_frame.pack(fill='both', expand=True, pady=(0, 10))
+        self.text_directorio = tk.Text(directorio_frame, wrap='word', height=10)
+        self.text_directorio.pack(side='left', fill='both', expand=True)
+        scrollbar_directorio = ttk.Scrollbar(directorio_frame, orient='vertical', command=self.text_directorio.yview)
+        scrollbar_directorio.pack(side='right', fill='y')
+        self.text_directorio.config(yscrollcommand=scrollbar_directorio.set)
+
+        # Contenido Archivos
+        tk.Label(center_frame, text="Contenido Archivos Seleccionados:").pack(anchor='w')
+        archivos_frame = tk.Frame(center_frame)
+        archivos_frame.pack(fill='both', expand=True, pady=(0, 10))
+        self.text_archivos = tk.Text(archivos_frame, wrap='word', height=10)
+        self.text_archivos.pack(side='left', fill='both', expand=True)
+        scrollbar_archivos = ttk.Scrollbar(archivos_frame, orient='vertical', command=self.text_archivos.yview)
+        scrollbar_archivos.pack(side='right', fill='y')
+        self.text_archivos.config(yscrollcommand=scrollbar_archivos.set)
 
         self.text_prompt_base.tag_configure("prompt", foreground="blue")
         self.text_directorio.tag_configure("estructura", foreground="green")
         self.text_archivos.tag_configure("archivos", foreground="purple")
-
-        for label, widget in [
-            ("Prompt Base:", self.text_prompt_base),
-            ("Estructura de Carpetas:", self.text_directorio),
-            ("Contenido Archivos Seleccionados:", self.text_archivos)
-        ]:
-            tk.Label(center_frame, text=label).pack(anchor='w')
-            widget.pack(fill='both', expand=True, pady=(0, 10))
 
         # === COLUMNA DERECHA ===
         right_frame = tk.LabelFrame(main_paned, text="Prompt Generado", padx=10, pady=10)
@@ -88,8 +105,13 @@ class MainWindow:
         main_paned.paneconfig(right_frame, stretch="always")
 
         tk.Label(right_frame, text="Prompt Final Generado:").pack(anchor='w')
-        self.text_prompt_final = tk.Text(right_frame, wrap='word')
-        self.text_prompt_final.pack(fill='both', expand=True)
+        prompt_final_frame = tk.Frame(right_frame)
+        prompt_final_frame.pack(fill='both', expand=True)
+        self.text_prompt_final = tk.Text(prompt_final_frame, wrap='word')
+        self.text_prompt_final.pack(side='left', fill='both', expand=True)
+        scrollbar_final = ttk.Scrollbar(prompt_final_frame, orient='vertical', command=self.text_prompt_final.yview)
+        scrollbar_final.pack(side='right', fill='y')
+        self.text_prompt_final.config(yscrollcommand=scrollbar_final.set)
 
         frame_botones = tk.Frame(right_frame)
         frame_botones.pack(pady=10, anchor='s')
