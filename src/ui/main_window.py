@@ -12,6 +12,7 @@ class MainWindow:
         self.root.title("Prompt Code Assistant")
         self.root.state('zoomed')
         self._center_window(self.root, 500, 500)
+        self.root.minsize(800, 600)  # Ancho mínimo total (3 columnas de 200), alto mínimo 400
 
         # Inicializar GUI helper y controlador
         self.gui_helper = PromptAssistantGUI(self.root, FOLDERS_TO_IGNORE)
@@ -36,7 +37,8 @@ class MainWindow:
 
         # === COLUMNA IZQUIERDA ===
         left_frame = tk.LabelFrame(main_paned, text="Acciones", padx=10, pady=10)
-        main_paned.add(left_frame, minsize=250)
+        main_paned.add(left_frame, minsize=200)
+        main_paned.paneconfig(left_frame, stretch="always")
 
         self.btn_select_prompt, self.status_prompt = self._crear_fila_boton_estado(
             left_frame, "Seleccionar Prompt Base", self.controller.seleccionar_prompt_base)
@@ -61,7 +63,8 @@ class MainWindow:
 
         # === COLUMNA CENTRAL ===
         center_frame = tk.LabelFrame(main_paned, text="Visualización de Contexto", padx=10, pady=10)
-        main_paned.add(center_frame, minsize=300)
+        main_paned.add(center_frame, minsize=200)
+        main_paned.paneconfig(center_frame, stretch="always")
 
         self.text_prompt_base = tk.Text(center_frame, wrap='word', height=10)
         self.text_directorio = tk.Text(center_frame, wrap='word', height=10)
@@ -81,7 +84,8 @@ class MainWindow:
 
         # === COLUMNA DERECHA ===
         right_frame = tk.LabelFrame(main_paned, text="Prompt Generado", padx=10, pady=10)
-        main_paned.add(right_frame, minsize=300)
+        main_paned.add(right_frame, minsize=200)
+        main_paned.paneconfig(right_frame, stretch="always")
 
         tk.Label(right_frame, text="Prompt Final Generado:").pack(anchor='w')
         self.text_prompt_final = tk.Text(right_frame, wrap='word')
