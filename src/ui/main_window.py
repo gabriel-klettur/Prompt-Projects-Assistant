@@ -124,9 +124,8 @@ class MainWindow:
 
     def set_archivos_estado(self, estado, cantidad=0):
         icon = "✔️" if estado else "❌"
-        color = "green" if estado else "red"
-        texto = f"{icon} {cantidad} archivos seleccionados" if estado else f"{icon}"
-        self.status_files.config(text=texto, fg=color)
+        color = "green" if estado else "red"        
+        self.status_files.config(text=f"{icon}", fg=color)
         self.btn_select_files.config(text=f"Seleccionar Archivos ({cantidad})" if estado else "Seleccionar Archivos")
 
     def mostrar_prompt_base(self, texto):
