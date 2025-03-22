@@ -19,12 +19,6 @@ Se requiere:
 - Mantener una estructura de carpetas lo más profesional posible.
 
 
-Mi estructura de directorios actual es:
-'''
-
-
-'''
-
 Me ayudaras a mejorar y a implementar ideas en mi codigo.
 
 
