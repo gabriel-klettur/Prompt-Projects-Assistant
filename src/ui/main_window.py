@@ -5,15 +5,33 @@ from tkinter import ttk
 from src.ui import PromptAssistantGUI
 from src.controller.prompt_controller import PromptController
 from src.config import FOLDERS_TO_IGNORE
+from src.utils import i18n
 
 
 class MainWindow:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Prompt Code Assistant")
+        self.root.title(i18n.t("title"))
         self.root.state('zoomed')
         self._center_window(self.root, 500, 500)
         self.root.minsize(800, 600)
+
+        # === SELECTOR DE IDIOMA ===
+        top_frame = tk.Frame(self.root)
+        top_frame.pack(fill='x', padx=10, pady=(5, 0))
+
+        tk.Label(top_frame, text=i18n.t("language") + ":", font=("Segoe UI", 10)).pack(side='left')
+
+        self.language_var = tk.StringVar(value=i18n.current_language)
+        language_selector = ttk.Combobox(
+            top_frame,
+            textvariable=self.language_var,
+            values=list(i18n.AVAILABLE_LANGUAGES.keys()),
+            state="readonly",
+            width=5
+        )
+        language_selector.pack(side='left', padx=5)
+        language_selector.bind("<<ComboboxSelected>>", self._on_language_change)
 
         self.gui_helper = PromptAssistantGUI(self.root, FOLDERS_TO_IGNORE)
         self.controller = PromptController(self.gui_helper, self)
@@ -36,21 +54,23 @@ class MainWindow:
         main_paned.pack(fill='both', expand=True)
 
         # === COLUMNA IZQUIERDA ===
-        left_frame = tk.LabelFrame(main_paned, text="Acciones", padx=10, pady=10)
+        left_frame = tk.LabelFrame(main_paned, text=i18n.t("actions"), padx=10, pady=10)
         main_paned.add(left_frame, minsize=200)
         main_paned.paneconfig(left_frame, stretch="always")
 
         self.btn_select_prompt, self.status_prompt = self._crear_fila_boton_estado(
-            left_frame, "Seleccionar Prompt Base", self.controller.seleccionar_prompt_base)
+            left_frame, i18n.t("select_prompt_base"), self.controller.seleccionar_prompt_base)
 
         self.btn_select_project, self.status_project = self._crear_fila_boton_estado(
-            left_frame, "Seleccionar Carpeta Proyecto", self.controller.seleccionar_proyecto)
+            left_frame, i18n.t("select_project"), self.controller.seleccionar_proyecto)
 
         self.btn_select_files, self.status_files = self._crear_fila_boton_estado(
-            left_frame, "Seleccionar Archivos", self.controller.seleccionar_archivos)
+            left_frame, i18n.t("select_files"), self.controller.seleccionar_archivos)
         self.btn_select_files.config(state='disabled')
 
-        tk.Label(left_frame, text="Archivos seleccionados:").pack(anchor='w', pady=(20, 0))
+        self.label_selected_files = tk.Label(left_frame, text=i18n.t("selected_files"))
+        self.label_selected_files.pack(anchor='w', pady=(20, 0))
+
         listbox_frame = tk.Frame(left_frame)
         listbox_frame.pack(fill='both', expand=True)
 
@@ -62,12 +82,12 @@ class MainWindow:
         self.listbox_files.config(yscrollcommand=scrollbar.set)
 
         # === COLUMNA CENTRAL ===
-        center_frame = tk.LabelFrame(main_paned, text="Visualización de Contexto", padx=10, pady=10)
+        center_frame = tk.LabelFrame(main_paned, text=i18n.t("context_view"), padx=10, pady=10)
         main_paned.add(center_frame, minsize=200)
         main_paned.paneconfig(center_frame, stretch="always")
 
-        # Prompt Base
-        tk.Label(center_frame, text="Prompt Base:").pack(anchor='w')
+        self.label_prompt_base = tk.Label(center_frame, text=i18n.t("prompt_base"))
+        self.label_prompt_base.pack(anchor='w')
         prompt_base_frame = tk.Frame(center_frame)
         prompt_base_frame.pack(fill='both', expand=True, pady=(0, 10))
         self.text_prompt_base = tk.Text(prompt_base_frame, wrap='word', height=10)
@@ -76,8 +96,8 @@ class MainWindow:
         scrollbar_base.pack(side='right', fill='y')
         self.text_prompt_base.config(yscrollcommand=scrollbar_base.set)
 
-        # Estructura de Carpetas
-        tk.Label(center_frame, text="Estructura de Carpetas:").pack(anchor='w')
+        self.label_folder_structure = tk.Label(center_frame, text=i18n.t("folder_structure"))
+        self.label_folder_structure.pack(anchor='w')
         directorio_frame = tk.Frame(center_frame)
         directorio_frame.pack(fill='both', expand=True, pady=(0, 10))
         self.text_directorio = tk.Text(directorio_frame, wrap='word', height=10)
@@ -86,8 +106,8 @@ class MainWindow:
         scrollbar_directorio.pack(side='right', fill='y')
         self.text_directorio.config(yscrollcommand=scrollbar_directorio.set)
 
-        # Contenido Archivos
-        tk.Label(center_frame, text="Contenido Archivos Seleccionados:").pack(anchor='w')
+        self.label_file_content = tk.Label(center_frame, text=i18n.t("file_content"))
+        self.label_file_content.pack(anchor='w')
         archivos_frame = tk.Frame(center_frame)
         archivos_frame.pack(fill='both', expand=True, pady=(0, 10))
         self.text_archivos = tk.Text(archivos_frame, wrap='word', height=10)
@@ -101,11 +121,12 @@ class MainWindow:
         self.text_archivos.tag_configure("archivos", foreground="purple")
 
         # === COLUMNA DERECHA ===
-        right_frame = tk.LabelFrame(main_paned, text="Prompt Generado", padx=10, pady=10)
+        right_frame = tk.LabelFrame(main_paned, text=i18n.t("generated_prompt"), padx=10, pady=10)
         main_paned.add(right_frame, minsize=200)
         main_paned.paneconfig(right_frame, stretch="always")
 
-        tk.Label(right_frame, text="Prompt Final Generado:").pack(anchor='w')
+        self.label_final_prompt = tk.Label(right_frame, text=i18n.t("final_prompt"))
+        self.label_final_prompt.pack(anchor='w')
         prompt_final_frame = tk.Frame(right_frame)
         prompt_final_frame.pack(fill='both', expand=True)
         self.text_prompt_final = tk.Text(prompt_final_frame, wrap='word')
@@ -117,10 +138,9 @@ class MainWindow:
         frame_botones = tk.Frame(right_frame)
         frame_botones.pack(pady=10, anchor='s')
 
-        # Botón Copiar (verde)
         self.btn_copiar = tk.Button(
             frame_botones,
-            text="📋 Copiar",
+            text=i18n.t("copy"),
             bg="#4CAF50", fg="white",
             font=("Segoe UI", 10, "bold"),
             width=20,
@@ -128,10 +148,9 @@ class MainWindow:
         )
         self.btn_copiar.pack(side='left', padx=10)
 
-        # Botón Limpiar (rojo)
         self.btn_limpiar = tk.Button(
             frame_botones,
-            text="🧹 Limpiar",
+            text=i18n.t("clear"),
             bg="#F44336", fg="white",
             font=("Segoe UI", 10, "bold"),
             width=20,
@@ -167,9 +186,9 @@ class MainWindow:
 
     def set_archivos_estado(self, estado, cantidad=0):
         icon = "✔️" if estado else "❌"
-        color = "green" if estado else "red"        
+        color = "green" if estado else "red"
         self.status_files.config(text=f"{icon}", fg=color)
-        self.btn_select_files.config(text=f"Seleccionar Archivos ({cantidad})" if estado else "Seleccionar Archivos")
+        self.btn_select_files.config(text=f"{i18n.t('select_files')} ({cantidad})" if estado else i18n.t("select_files"))
 
     def mostrar_prompt_base(self, texto):
         self.text_prompt_base.delete("1.0", tk.END)
@@ -217,5 +236,23 @@ class MainWindow:
         text_widget.insert(tk.END, f"\n-------- {titulo.upper()} --------\n", "separador")
         text_widget.insert(tk.END, f"\n-------------------------------------------------------\n", "separador")
 
+    def _on_language_change(self, event):
+        nuevo_idioma = self.language_var.get()
+        i18n.set_language(nuevo_idioma)
+        self._actualizar_textos_ui()
+
+    def _actualizar_textos_ui(self):
+        self.root.title(i18n.t("title"))
+        self.btn_select_prompt.config(text=i18n.t("select_prompt_base"))
+        self.btn_select_project.config(text=i18n.t("select_project"))
+        self.btn_select_files.config(text=i18n.t("select_files"))
+        self.btn_copiar.config(text=i18n.t("copy"))
+        self.btn_limpiar.config(text=i18n.t("clear"))
+        self.label_selected_files.config(text=i18n.t("selected_files"))
+        self.label_prompt_base.config(text=i18n.t("prompt_base"))
+        self.label_folder_structure.config(text=i18n.t("folder_structure"))
+        self.label_file_content.config(text=i18n.t("file_content"))
+        self.label_final_prompt.config(text=i18n.t("final_prompt"))
+
     def run(self):
-        self.root.mainloop()
+        self.root.mainloop()   
