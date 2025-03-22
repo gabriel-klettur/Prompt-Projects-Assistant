@@ -31,13 +31,12 @@ class MainWindow:
         style.configure("TButton", font=("Segoe UI", 10), padding=6)
         style.configure("TLabel", font=("Segoe UI", 10))
 
-        main_frame = tk.Frame(self.root)
-        main_frame.pack(fill='both', expand=True)
-        main_frame.columnconfigure((0, 1, 2), weight=1)
+        main_paned = tk.PanedWindow(self.root, orient='horizontal', sashrelief='raised', showhandle=True)
+        main_paned.pack(fill='both', expand=True)
 
         # === COLUMNA IZQUIERDA ===
-        left_frame = tk.LabelFrame(main_frame, text="Acciones", padx=10, pady=10)
-        left_frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
+        left_frame = tk.LabelFrame(main_paned, text="Acciones", padx=10, pady=10)
+        main_paned.add(left_frame, minsize=250)
 
         self.btn_select_prompt, self.status_prompt = self._crear_fila_boton_estado(
             left_frame, "Seleccionar Prompt Base", self.controller.seleccionar_prompt_base)
@@ -61,8 +60,8 @@ class MainWindow:
         self.listbox_files.config(yscrollcommand=scrollbar.set)
 
         # === COLUMNA CENTRAL ===
-        center_frame = tk.LabelFrame(main_frame, text="Visualización de Contexto", padx=10, pady=10)
-        center_frame.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
+        center_frame = tk.LabelFrame(main_paned, text="Visualización de Contexto", padx=10, pady=10)
+        main_paned.add(center_frame, minsize=300)
 
         self.text_prompt_base = tk.Text(center_frame, wrap='word', height=10)
         self.text_directorio = tk.Text(center_frame, wrap='word', height=10)
@@ -81,8 +80,8 @@ class MainWindow:
             widget.pack(fill='both', expand=True, pady=(0, 10))
 
         # === COLUMNA DERECHA ===
-        right_frame = tk.LabelFrame(main_frame, text="Prompt Generado", padx=10, pady=10)
-        right_frame.grid(row=0, column=2, sticky='nsew', padx=10, pady=10)
+        right_frame = tk.LabelFrame(main_paned, text="Prompt Generado", padx=10, pady=10)
+        main_paned.add(right_frame, minsize=300)
 
         tk.Label(right_frame, text="Prompt Final Generado:").pack(anchor='w')
         self.text_prompt_final = tk.Text(right_frame, wrap='word')
