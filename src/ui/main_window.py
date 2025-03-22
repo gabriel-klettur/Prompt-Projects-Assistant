@@ -6,6 +6,7 @@ from src.ui import PromptAssistantGUI
 from src.controller.prompt_controller import PromptController
 from src.config import FOLDERS_TO_IGNORE
 
+
 class MainWindow:
     def __init__(self):
         self.root = tk.Tk()
@@ -115,8 +116,28 @@ class MainWindow:
 
         frame_botones = tk.Frame(right_frame)
         frame_botones.pack(pady=10, anchor='s')
-        self.btn_copiar = ttk.Button(frame_botones, text="Copiar", command=self.controller.copiar_prompt)
-        self.btn_copiar.pack(side='left', padx=5)
+
+        # Botón Copiar (verde)
+        self.btn_copiar = tk.Button(
+            frame_botones,
+            text="📋 Copiar",
+            bg="#4CAF50", fg="white",
+            font=("Segoe UI", 10, "bold"),
+            width=20,
+            command=self.controller.copiar_prompt
+        )
+        self.btn_copiar.pack(side='left', padx=10)
+
+        # Botón Limpiar (rojo)
+        self.btn_limpiar = tk.Button(
+            frame_botones,
+            text="🧹 Limpiar",
+            bg="#F44336", fg="white",
+            font=("Segoe UI", 10, "bold"),
+            width=20,
+            command=self.controller.limpiar_todo
+        )
+        self.btn_limpiar.pack(side='left', padx=10)
 
         self.text_prompt_final.tag_configure("prompt", foreground="blue")
         self.text_prompt_final.tag_configure("estructura", foreground="green")

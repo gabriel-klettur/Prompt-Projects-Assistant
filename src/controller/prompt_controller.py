@@ -67,3 +67,25 @@ class PromptController:
             self.gui_helper.copiar_al_portapapeles(self.prompt_final)
         else:
             messagebox.showwarning("Advertencia", "El prompt final está vacío.")
+    
+    def limpiar_todo(self):
+        self.prompt_base_path = None
+        self.project_folder = None
+        self.selected_files = []
+        self.estructura = ''
+        self.contenido_archivos = ''
+        self.prompt_final = ''
+
+        # Limpiar la interfaz
+        self.view.set_prompt_base_estado(False, "")
+        self.view.set_project_estado(False, "")
+        self.view.set_archivos_estado(False)
+        self.view.mostrar_prompt_base("")
+        self.view.mostrar_estructura("")
+        self.view.mostrar_contenido_archivos("")
+        self.view.mostrar_lista_archivos([])
+        self.view.mostrar_prompt_final("")
+
+        # Mensaje de confirmación
+        messagebox.showinfo("Prompt Assistant", "Todos los campos han sido limpiados correctamente.")
+
