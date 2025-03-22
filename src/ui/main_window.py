@@ -26,27 +26,28 @@ class MainWindow:
         window.geometry(f"{width}x{height}+{x}+{y}")
 
     def _create_widgets(self):
+        style = ttk.Style()
+        style.theme_use("clam")
+        style.configure("TButton", font=("Segoe UI", 10), padding=6)
+        style.configure("TLabel", font=("Segoe UI", 10))
+
         main_frame = tk.Frame(self.root)
         main_frame.pack(fill='both', expand=True)
         main_frame.columnconfigure((0, 1, 2), weight=1)
 
         # === COLUMNA IZQUIERDA ===
-        left_frame = tk.Frame(main_frame)
+        left_frame = tk.LabelFrame(main_frame, text="Acciones", padx=10, pady=10)
         left_frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
 
-        self.btn_select_prompt = ttk.Button(left_frame, text="Seleccionar Prompt Base", command=self.controller.seleccionar_prompt_base)
-        self.status_prompt = tk.Label(left_frame, text="No seleccionado", fg="red")
+        self.btn_select_prompt, self.status_prompt = self._crear_fila_boton_estado(
+            left_frame, "Seleccionar Prompt Base", self.controller.seleccionar_prompt_base)
 
-        self.btn_select_project = ttk.Button(left_frame, text="Seleccionar Carpeta Proyecto", command=self.controller.seleccionar_proyecto)
-        self.status_project = tk.Label(left_frame, text="No seleccionado", fg="red")
+        self.btn_select_project, self.status_project = self._crear_fila_boton_estado(
+            left_frame, "Seleccionar Carpeta Proyecto", self.controller.seleccionar_proyecto)
 
-        self.btn_select_files = ttk.Button(left_frame, text="Seleccionar Archivos", command=self.controller.seleccionar_archivos, state='disabled')
-        self.status_files = tk.Label(left_frame, text="No seleccionado", fg="red")
-
-        for widget in [self.btn_select_prompt, self.status_prompt,
-                       self.btn_select_project, self.status_project,
-                       self.btn_select_files, self.status_files]:
-            widget.pack(pady=10, anchor='w')
+        self.btn_select_files, self.status_files = self._crear_fila_boton_estado(
+            left_frame, "Seleccionar Archivos", self.controller.seleccionar_archivos)
+        self.btn_select_files.config(state='disabled')
 
         tk.Label(left_frame, text="Archivos seleccionados:").pack(anchor='w', pady=(20, 0))
         listbox_frame = tk.Frame(left_frame)
@@ -60,7 +61,7 @@ class MainWindow:
         self.listbox_files.config(yscrollcommand=scrollbar.set)
 
         # === COLUMNA CENTRAL ===
-        center_frame = tk.Frame(main_frame)
+        center_frame = tk.LabelFrame(main_frame, text="Visualización de Contexto", padx=10, pady=10)
         center_frame.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
 
         self.text_prompt_base = tk.Text(center_frame, wrap='word', height=10)
@@ -80,7 +81,7 @@ class MainWindow:
             widget.pack(fill='both', expand=True, pady=(0, 10))
 
         # === COLUMNA DERECHA ===
-        right_frame = tk.Frame(main_frame)
+        right_frame = tk.LabelFrame(main_frame, text="Prompt Generado", padx=10, pady=10)
         right_frame.grid(row=0, column=2, sticky='nsew', padx=10, pady=10)
 
         tk.Label(right_frame, text="Prompt Final Generado:").pack(anchor='w')
@@ -89,30 +90,41 @@ class MainWindow:
 
         frame_botones = tk.Frame(right_frame)
         frame_botones.pack(pady=10, anchor='s')
-
         self.btn_copiar = ttk.Button(frame_botones, text="Copiar", command=self.controller.copiar_prompt)
         self.btn_copiar.pack(side='left', padx=5)
 
-        # === OTROS AJUSTES ===
         self.text_prompt_final.tag_configure("prompt", foreground="blue")
         self.text_prompt_final.tag_configure("estructura", foreground="green")
         self.text_prompt_final.tag_configure("archivos", foreground="purple")
         self.text_prompt_final.tag_configure("separador", foreground="orange")
-        
-    # Métodos utilizados por el controlador:
+
+    def _crear_fila_boton_estado(self, parent, texto_boton, comando):
+        frame = tk.Frame(parent)
+        frame.pack(anchor='w', pady=5)
+        boton = ttk.Button(frame, text=texto_boton, command=comando)
+        boton.pack(side='left')
+        estado = tk.Label(frame, text="❌", fg="red", width=2)
+        estado.pack(side='left', padx=10)
+        return boton, estado
+
     def set_prompt_base_estado(self, estado, ruta):
-        self.status_prompt.config(text="Seleccionado" if estado else "No seleccionado", fg="green" if estado else "red")
+        icon = "✔️" if estado else "❌"
+        color = "green" if estado else "red"
+        self.status_prompt.config(text=f"{icon}", fg=color)
         self.btn_select_files['state'] = 'normal' if estado else 'disabled'
 
     def set_project_estado(self, estado, ruta):
-        self.status_project.config(text="Seleccionado" if estado else "No seleccionado", fg="green" if estado else "red")
+        icon = "✔️" if estado else "❌"
+        color = "green" if estado else "red"
+        self.status_project.config(text=f"{icon}", fg=color)
         self.btn_select_files['state'] = 'normal' if estado else 'disabled'
 
     def set_archivos_estado(self, estado, cantidad=0):
-        self.status_files.config(
-            text=f"{cantidad} archivos seleccionados" if estado else "No seleccionado",
-            fg="green" if estado else "red"
-        )
+        icon = "✔️" if estado else "❌"
+        color = "green" if estado else "red"
+        texto = f"{icon} {cantidad} archivos seleccionados" if estado else f"{icon}"
+        self.status_files.config(text=texto, fg=color)
+        self.btn_select_files.config(text=f"Seleccionar Archivos ({cantidad})" if estado else "Seleccionar Archivos")
 
     def mostrar_prompt_base(self, texto):
         self.text_prompt_base.delete("1.0", tk.END)
@@ -159,12 +171,6 @@ class MainWindow:
         text_widget.insert(tk.END, f"\n-------------------------------------------------------\n", "separador")
         text_widget.insert(tk.END, f"\n-------- {titulo.upper()} --------\n", "separador")
         text_widget.insert(tk.END, f"\n-------------------------------------------------------\n", "separador")
-
-    def _insertar_separador_titulado(self, text_widget, titulo):
-        text_widget.insert(tk.END, f"\n-------------------------------------------------------\n", "separador")
-        text_widget.insert(tk.END, f"\n-------- {titulo.upper()} --------\n", "separador")
-        text_widget.insert(tk.END, f"\n-------------------------------------------------------\n", "separador")
-
 
     def run(self):
         self.root.mainloop()
