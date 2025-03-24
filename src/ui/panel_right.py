@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import ttk
 from src.utils import i18n
 
-
 class RightPanel:
     def __init__(self, parent, controller):
         self.controller = controller
@@ -63,15 +62,15 @@ class RightPanel:
         self.text_prompt_final.delete("1.0", tk.END)
 
         if prompt_base:
-            self._insertar_separador_titulado("PROMPT BASE")
+            self._insertar_separador_titulado(i18n.t("section_prompt_base"))
             self.text_prompt_final.insert(tk.END, prompt_base + "\n", "prompt")
 
         if estructura:
-            self._insertar_separador_titulado("ESTRUCTURA DE CARPETAS")
+            self._insertar_separador_titulado(i18n.t("section_structure"))
             self.text_prompt_final.insert(tk.END, estructura + "\n", "estructura")
 
         if archivos:
-            self._insertar_separador_titulado("CONTENIDO DE LOS ARCHIVOS SELECCIONADOS")
+            self._insertar_separador_titulado(i18n.t("section_file_contents"))
             self.text_prompt_final.insert(tk.END, archivos, "archivos")
 
         return self.text_prompt_final.get("1.0", tk.END).strip()

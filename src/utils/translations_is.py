@@ -15,5 +15,10 @@ translations = {
     "generated_prompt": "Útbúinn Prompt",
     "copy": "📋 Afrita",
     "clear": "🧹 Hreinsa",
-    "language": "Tungumál"
+    "file_label": "Skráin",
+    "contains_label": "Inniheldur",
+    "language": "Tungumál",
+    "section_prompt_base": "Grunnprompt",
+    "section_structure": "Möppubygging",
+    "section_file_contents": "Efni valdra skráa"
 }

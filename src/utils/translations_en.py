@@ -15,5 +15,10 @@ translations = {
     "generated_prompt": "Generated Prompt",
     "copy": "📋 Copy",
     "clear": "🧹 Clear",
+    "file_label": "The file",
+    "contains_label": "Contains",
+    "section_prompt_base": "Prompt Base",
+    "section_structure": "Folder Structure",
+    "section_file_contents": "Selected Files Content",
     "language": "Language"
 }

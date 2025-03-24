@@ -1,6 +1,7 @@
 # utils/file_manager.py
 
 import os
+from src.utils import i18n  # 👈 Importa el sistema de traducción
 
 class FileManager:
     def __init__(self, folders_to_ignore=None):
@@ -54,7 +55,7 @@ class FileManager:
                 with open(archivo, 'r', encoding='utf-8') as f:
                     contenido = f.read()
                     contenido_archivos += "------------------------------------------------------------------------------------------------------------------------------------\n"
-                    contenido_archivos += f" El archivo: {os.path.basename(archivo)}, Contiene:\n'''\n{contenido}\n'''\n"
+                    contenido_archivos += f" {i18n.t('file_label')}: {os.path.basename(archivo)}, {i18n.t('contains_label')}:\n'''\n{contenido}\n'''\n"
                     contenido_archivos += "------------------------------------------------------------------------------------------------------------------------------------\n"
             except Exception as e:
                 print(f"Error al leer el archivo {archivo}: {e}")
