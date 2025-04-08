@@ -31,23 +31,54 @@ class PromptAssistantGUI:
 
     def mostrar_arbol_directorios(self, carpeta):
         self.archivos_seleccionados = []
-
         ventana = tk.Toplevel(self.root)
         ventana.title("Seleccionar Archivos del Árbol de Directorios")
         ancho_ventana, alto_ventana = 800, 600
         ventana.geometry(f"{ancho_ventana}x{alto_ventana}")
         self._centro_ventana(ventana, ancho_ventana, alto_ventana)
 
-        tree = ttk.Treeview(ventana, selectmode='extended')
-        tree.pack(expand=True, fill='both')
+        top_frame = tk.Frame(ventana)
+        top_frame.pack(fill='x', padx=10, pady=5)
 
-        nodos_rutas = {}
-        self._preparar_arbol(tree, carpeta, nodos_rutas)
+        tk.Label(top_frame, text="Only extensions:", font=("Segoe UI", 10, "bold")).pack(anchor='w')
+
+        # 🎯 Canvas + Scrollbar Horizontal para checkboxes
+        canvas_ext = tk.Canvas(top_frame, height=35)
+        scroll_x = tk.Scrollbar(top_frame, orient='horizontal', command=canvas_ext.xview)
+        canvas_ext.configure(xscrollcommand=scroll_x.set)
+
+        scroll_x.pack(fill='x', side='bottom')
+        canvas_ext.pack(fill='x', side='top')
+
+        inner_frame = tk.Frame(canvas_ext)
+        canvas_ext.create_window((0, 0), window=inner_frame, anchor='nw')
+
+        def on_configure(event):
+            canvas_ext.configure(scrollregion=canvas_ext.bbox("all"))
+        inner_frame.bind("<Configure>", on_configure)
+
+        extensions = self._extraer_extensiones_disponibles(carpeta)
+        self.extension_vars = {}
+
+        for ext in sorted(extensions):
+            var = tk.BooleanVar()
+            cb = tk.Checkbutton(inner_frame, text=ext, variable=var, command=self._on_extension_checkbox_change)
+            cb.pack(side='left', padx=5)
+            self.extension_vars[ext] = var
+
+        tree_frame = tk.Frame(ventana)
+        tree_frame.pack(expand=True, fill='both')
+
+        self.tree = ttk.Treeview(tree_frame, selectmode='extended')
+        self.tree.pack(expand=True, fill='both')
+
+        self.nodos_rutas = {}
+        self._preparar_arbol(self.tree, carpeta, self.nodos_rutas)
 
         btn_confirmar = tk.Button(
             ventana,
             text="Confirmar Selección",
-            command=lambda: self._on_confirmar(tree, nodos_rutas, ventana)
+            command=lambda: self._on_confirmar(self.tree, self.nodos_rutas, ventana)
         )
         btn_confirmar.pack(pady=10)
 
@@ -58,6 +89,21 @@ class PromptAssistantGUI:
         posicion_x = (ventana.winfo_screenwidth() // 2) - (ancho_ventana // 2)
         posicion_y = (ventana.winfo_screenheight() // 2) - (alto_ventana // 2)
         ventana.geometry(f"+{posicion_x}+{posicion_y}")
+
+    def _extraer_extensiones_disponibles(self, carpeta):
+        extensiones = set()
+        carpeta = os.path.abspath(carpeta)
+
+        for root, dirs, files in os.walk(carpeta):
+            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in self.folders_to_ignore]
+            for file in files:
+                if file.startswith(".") or any(file.endswith(ext) for ext in self.folders_to_ignore):
+                    continue
+                ext = Path(file).suffix
+                if ext:
+                    extensiones.add(ext)
+
+        return extensiones
 
     def _insertar_nodo(self, tree, padre, texto, path, nodos_rutas):
         path_obj = Path(path)
@@ -70,15 +116,11 @@ class PromptAssistantGUI:
         ):
             return None
 
-        if path_obj.is_file() and self.only_extensions:
-            if not any(name.endswith(ext) for ext in self.only_extensions):
-                return None
-
         nodo = tree.insert(padre, 'end', text=texto, open=False)
         nodos_rutas[nodo] = str(path_obj)
 
         if path_obj.is_dir():
-            tree.insert(nodo, 'end')  # Hacerlo expandible
+            tree.insert(nodo, 'end')  # Expandible
 
         return nodo
 
@@ -121,3 +163,13 @@ class PromptAssistantGUI:
             if path and os.path.isfile(path):
                 self.archivos_seleccionados.append(path)
         ventana.destroy()
+
+    def _on_extension_checkbox_change(self):
+        extensiones_seleccionadas = [ext for ext, var in self.extension_vars.items() if var.get()]
+        for nodo, path in self.nodos_rutas.items():
+            if os.path.isfile(path):
+                ext = Path(path).suffix
+                if ext in extensiones_seleccionadas:
+                    self.tree.selection_add(nodo)
+                else:
+                    self.tree.selection_remove(nodo)
