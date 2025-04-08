@@ -1,8 +1,7 @@
-# src/controller/prompt_controller.py
-
 from tkinter import messagebox
 from src.core import FileManager
 from src.config import FOLDERS_TO_IGNORE
+from src.utils import i18n
 
 
 class PromptController:
@@ -36,7 +35,7 @@ class PromptController:
                 self.view.center_panel.mostrar_prompt_base(contenido)
             self.actualizar_prompt_final()
         else:
-            messagebox.showwarning("Advertencia", "No se seleccionó ningún archivo.")
+            messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_file_selected"))
 
     def seleccionar_proyecto(self):
         path = self.gui_helper.seleccionar_ruta(tipo="carpeta")
@@ -50,11 +49,11 @@ class PromptController:
 
             self.actualizar_prompt_final()
         else:
-            messagebox.showwarning("Advertencia", "No se seleccionó ninguna carpeta.")
+            messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_folder_selected"))
 
     def seleccionar_archivos(self):
         if not self.project_folder:
-            messagebox.showerror("Error", "Primero seleccione una carpeta de proyecto.")
+            messagebox.showerror(i18n.t("error_title"), i18n.t("project_folder_required"))
             return
 
         self.gui_helper.folders_to_ignore = self.obtener_ignorados()
@@ -71,7 +70,7 @@ class PromptController:
 
             self.actualizar_prompt_final()
         else:
-            messagebox.showwarning("Advertencia", "No se seleccionaron archivos.")
+            messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_files_selected"))
             self.view.left_panel.set_archivos_estado(False)
 
     def actualizar_prompt_final(self):
@@ -90,7 +89,7 @@ class PromptController:
         if self.prompt_final:
             self.gui_helper.copiar_al_portapapeles(self.prompt_final)
         else:
-            messagebox.showwarning("Advertencia", "El prompt final está vacío.")
+            messagebox.showwarning(i18n.t("warning_title"), i18n.t("prompt_empty"))
 
     def limpiar_todo(self):
         self.prompt_base_path = None
@@ -110,7 +109,7 @@ class PromptController:
         self.view.center_panel.mostrar_contenido_archivos("")
         self.view.right_panel.mostrar_prompt_final("")
 
-        messagebox.showinfo("Prompt Assistant", "Todos los campos han sido limpiados correctamente.")
+        messagebox.showinfo(i18n.t("app_name"), i18n.t("fields_cleared"))
 
     def on_ignore_change(self):
         if not self.project_folder:

@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import os
 from pathlib import Path
+from src.utils import i18n
 
 
 class PromptAssistantGUI:
@@ -15,9 +16,9 @@ class PromptAssistantGUI:
 
     def seleccionar_ruta(self, tipo="archivo"):
         if tipo == "archivo":
-            return filedialog.askopenfilename(parent=self.root, title="Seleccionar archivo")
+            return filedialog.askopenfilename(parent=self.root, title=i18n.t("select_file"))
         elif tipo == "carpeta":
-            return filedialog.askdirectory(parent=self.root, title="Seleccionar carpeta")
+            return filedialog.askdirectory(parent=self.root, title=i18n.t("select_folder"))
         return None
 
     def copiar_al_portapapeles(self, texto):
@@ -25,14 +26,14 @@ class PromptAssistantGUI:
             self.root.clipboard_clear()
             self.root.clipboard_append(texto)
             self.root.update()
-            messagebox.showinfo("Prompt Assistant", "Prompt copiado al portapapeles.", parent=self.root)
+            messagebox.showinfo(i18n.t("app_name"), i18n.t("copied_to_clipboard"), parent=self.root)
         except Exception as e:
-            messagebox.showerror("Error", f"Error copiando al portapapeles: {str(e)}")
+            messagebox.showerror(i18n.t("app_name"), f"{i18n.t('clipboard_error')} {str(e)}")
 
     def mostrar_arbol_directorios(self, carpeta):
         self.archivos_seleccionados = []
         ventana = tk.Toplevel(self.root)
-        ventana.title("Seleccionar Archivos del Árbol de Directorios")
+        ventana.title(i18n.t("select_files_title"))
         ancho_ventana, alto_ventana = 800, 600
         ventana.geometry(f"{ancho_ventana}x{alto_ventana}")
         self._centro_ventana(ventana, ancho_ventana, alto_ventana)
@@ -40,9 +41,8 @@ class PromptAssistantGUI:
         top_frame = tk.Frame(ventana)
         top_frame.pack(fill='x', padx=10, pady=5)
 
-        tk.Label(top_frame, text="Only extensions:", font=("Segoe UI", 10, "bold")).pack(anchor='w')
+        tk.Label(top_frame, text=i18n.t("only_extensions"), font=("Segoe UI", 10, "bold")).pack(anchor='w')
 
-        # 🎯 Canvas + Scrollbar Horizontal para checkboxes
         canvas_ext = tk.Canvas(top_frame, height=35)
         scroll_x = tk.Scrollbar(top_frame, orient='horizontal', command=canvas_ext.xview)
         canvas_ext.configure(xscrollcommand=scroll_x.set)
@@ -77,7 +77,7 @@ class PromptAssistantGUI:
 
         btn_confirmar = tk.Button(
             ventana,
-            text="Confirmar Selección",
+            text=i18n.t("confirm_selection"),
             command=lambda: self._on_confirmar(self.tree, self.nodos_rutas, ventana)
         )
         btn_confirmar.pack(pady=10)

@@ -22,5 +22,22 @@ translations = {
     "section_file_contents": "Selected Files Content",
     "language": "Language",
     "only_extensions": "Only Allowed Extensions:",
-    "ignore_folders_extensions": "Ignore folders/extensions:"
+    "only_extensions_checkbox": "Only extensions:",    
+    "ignore_folders_extensions": "Ignore folders/extensions:",
+    "select_files_title": "Select Files from Project Tree",
+    "confirm_selection": "Confirm Selection",
+    "only_extensions": "Only extensions:",
+    "app_name": "Prompt Code Assistant",
+    "copied_to_clipboard": "Prompt copied to clipboard.",
+    "clipboard_error": "Error copying to clipboard:",
+    "select_file": "Select file",
+    "select_folder": "Select folder",
+    "warning_title": "Warning",
+    "no_file_selected": "No file was selected.",
+    "no_folder_selected": "No folder was selected.",
+    "error_title": "Error",
+    "project_folder_required": "Please select a project folder first.",
+    "no_files_selected": "No files were selected.",
+    "prompt_empty": "The final prompt is empty.",
+    "fields_cleared": "All fields were successfully cleared."
 }

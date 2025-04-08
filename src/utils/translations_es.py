@@ -21,7 +21,22 @@ translations = {
     "section_prompt_base": "Prompt Base",
     "section_structure": "Estructura de Carpetas",
     "section_file_contents": "Contenido de los Archivos Seleccionados",
-    "only_extensions": "Solo Extensiones Permitidas:",
-    "ignore_folders_extensions": "Ignorar carpetas/extensiones:"
-    
+    "only_extensions": "Solo Extensiones Permitidas:",    
+    "select_files_title": "Seleccionar Archivos del Árbol de Directorios",
+    "confirm_selection": "Confirmar Selección",
+    "only_extensions": "Solo extensiones:",
+    "app_name": "Asistente de Código para Prompts",
+    "copied_to_clipboard": "Prompt copiado al portapapeles.",
+    "clipboard_error": "Error copiando al portapapeles:",
+    "select_file": "Seleccionar archivo",
+    "select_folder": "Seleccionar carpeta",
+    "ignore_folders_extensions": "Ignorar carpetas/extensiones:",
+    "warning_title": "Advertencia",
+    "no_file_selected": "No se seleccionó ningún archivo.",
+    "no_folder_selected": "No se seleccionó ninguna carpeta.",
+    "error_title": "Error",
+    "project_folder_required": "Primero seleccione una carpeta de proyecto.",
+    "no_files_selected": "No se seleccionaron archivos.",
+    "prompt_empty": "El prompt final está vacío.",
+    "fields_cleared": "Todos los campos han sido limpiados correctamente."
 }

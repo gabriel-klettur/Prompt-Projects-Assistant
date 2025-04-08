@@ -22,5 +22,21 @@ translations = {
     "section_structure": "Möppubygging",
     "section_file_contents": "Efni valdra skráa",
     "only_extensions": "Aðeins leyfðar endingar:",
-    "ignore_folders_extensions": "Hunsa möppur/endingar:"
+    "ignore_folders_extensions": "Hunsa möppur/endingar:",
+    "select_files_title": "Veldu skrár úr verkefnatré",
+    "confirm_selection": "Staðfesta val",
+    "only_extensions": "Aðeins endingar:",
+    "app_name": "Aðstoðarmaður fyrir Prompt-kóða",
+    "copied_to_clipboard": "Prompt afritað í klemmuspjald.",
+    "clipboard_error": "Villa við afritun á klemmuspjald:",
+    "select_file": "Veldu skrá",
+    "select_folder": "Veldu möppu",
+    "warning_title": "Aðvörun",
+    "no_file_selected": "Engin skrá var valin.",
+    "no_folder_selected": "Engin mappa var valin.",
+    "error_title": "Villa",
+    "project_folder_required": "Veldu fyrst verkefnamöppu.",
+    "no_files_selected": "Engar skrár voru valdar.",
+    "prompt_empty": "Lokapromptið er tómt.",
+    "fields_cleared": "Öllum svæðum hefur verið hreinsað réttilega."
 }
