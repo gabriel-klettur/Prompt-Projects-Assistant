@@ -55,6 +55,9 @@ class PromptController:
             messagebox.showerror("Error", "Primero seleccione una carpeta de proyecto.")
             return
 
+        # ✅ Sincronizar ignores actuales con el GUI
+        self.gui_helper.folders_to_ignore = self.obtener_ignorados()
+
         self.selected_files = self.gui_helper.mostrar_arbol_directorios(self.project_folder)
         if self.selected_files:
             self.view.left_panel.set_archivos_estado(True, len(self.selected_files))
