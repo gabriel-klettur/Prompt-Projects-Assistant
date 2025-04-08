@@ -1,5 +1,3 @@
-# src/ui/prompt_assistant_gui.py
-
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import os
@@ -71,6 +69,9 @@ class PromptAssistantGUI:
 
         self.tree = ttk.Treeview(tree_frame, selectmode='extended')
         self.tree.pack(expand=True, fill='both')
+
+        self.tree.bind("<Button-1>", self._interceptar_click)
+        self.tree.bind("<ButtonRelease-1>", self._on_tree_click)
 
         self.nodos_rutas = {}
         self._preparar_arbol(self.tree, carpeta, self.nodos_rutas)
@@ -173,3 +174,17 @@ class PromptAssistantGUI:
                     self.tree.selection_add(nodo)
                 else:
                     self.tree.selection_remove(nodo)
+
+    def _interceptar_click(self, event):
+        region = self.tree.identify("region", event.x, event.y)
+        if region == "tree":
+            return "break"
+
+    def _on_tree_click(self, event):
+        item = self.tree.identify_row(event.y)
+        if not item:
+            return
+        if item in self.tree.selection():
+            self.tree.selection_remove(item)
+        else:
+            self.tree.selection_add(item)
