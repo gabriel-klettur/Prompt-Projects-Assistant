@@ -21,5 +21,6 @@ translations = {
     "section_structure": "Folder Structure",
     "section_file_contents": "Selected Files Content",
     "language": "Language",
+    "only_extensions": "Only Allowed Extensions:",
     "ignore_folders_extensions": "Ignore folders/extensions:"
 }

@@ -22,16 +22,18 @@ class PromptController:
         texto = self.view.left_panel.entry_ignore.get("1.0", "end").strip()
         return [item.strip() for item in texto.split(",") if item.strip()]
 
+    def obtener_solo_extensiones(self):
+        texto = self.view.left_panel.entry_only_ext.get("1.0", "end").strip()
+        return [ext.strip() for ext in texto.split(",") if ext.strip()]
+
     def seleccionar_prompt_base(self):
         path = self.gui_helper.seleccionar_ruta(tipo="archivo")
         if path:
             self.prompt_base_path = path
-
             self.view.left_panel.set_prompt_base_estado(True)
             with open(path, 'r', encoding='utf-8') as f:
                 contenido = f.read()
                 self.view.center_panel.mostrar_prompt_base(contenido)
-
             self.actualizar_prompt_final()
         else:
             messagebox.showwarning("Advertencia", "No se seleccionó ningún archivo.")
@@ -40,7 +42,7 @@ class PromptController:
         path = self.gui_helper.seleccionar_ruta(tipo="carpeta")
         if path:
             self.project_folder = path
-            self.file_manager = FileManager(self.obtener_ignorados())
+            self.file_manager = FileManager(self.obtener_ignorados(), self.obtener_solo_extensiones())
 
             self.estructura = self.file_manager.genera_estructura_de_carpetas(path)
             self.view.left_panel.set_project_estado(True)
@@ -55,15 +57,15 @@ class PromptController:
             messagebox.showerror("Error", "Primero seleccione una carpeta de proyecto.")
             return
 
-        # ✅ Sincronizar ignores actuales con el GUI
         self.gui_helper.folders_to_ignore = self.obtener_ignorados()
+        self.gui_helper.only_extensions = self.obtener_solo_extensiones()
 
         self.selected_files = self.gui_helper.mostrar_arbol_directorios(self.project_folder)
         if self.selected_files:
             self.view.left_panel.set_archivos_estado(True, len(self.selected_files))
             self.view.left_panel.mostrar_lista_archivos(self.selected_files)
 
-            self.file_manager = FileManager(self.obtener_ignorados())
+            self.file_manager = FileManager(self.obtener_ignorados(), self.obtener_solo_extensiones())
             self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
 
@@ -106,7 +108,6 @@ class PromptController:
         self.view.center_panel.mostrar_prompt_base("")
         self.view.center_panel.mostrar_estructura("")
         self.view.center_panel.mostrar_contenido_archivos("")
-
         self.view.right_panel.mostrar_prompt_final("")
 
         messagebox.showinfo("Prompt Assistant", "Todos los campos han sido limpiados correctamente.")
@@ -115,8 +116,7 @@ class PromptController:
         if not self.project_folder:
             return
 
-        self.file_manager = FileManager(self.obtener_ignorados())
-
+        self.file_manager = FileManager(self.obtener_ignorados(), self.obtener_solo_extensiones())
         self.estructura = self.file_manager.genera_estructura_de_carpetas(self.project_folder)
         self.view.center_panel.mostrar_estructura(self.estructura)
 

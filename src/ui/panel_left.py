@@ -16,16 +16,20 @@ class LeftPanel:
         self.btn_select_prompt, self.status_prompt = self._crear_fila_boton_estado(
             i18n.t("select_prompt_base"), self.controller.seleccionar_prompt_base)
 
-        # NUEVO: Input para carpetas/extensiones a ignorar
+        # === Ignore folders/extensions ===
         self.label_ignore = tk.Label(self.frame, text=i18n.t("ignore_folders_extensions"))
         self.label_ignore.pack(anchor='w', pady=(10, 0))
-
         self.entry_ignore = tk.Text(self.frame, height=3, wrap='word')
-        self.entry_ignore.pack(fill='x', padx=5, pady=(0, 10))
+        self.entry_ignore.pack(fill='x', padx=5, pady=(0, 5))
         self.entry_ignore.insert(tk.END, ", ".join(config.FOLDERS_TO_IGNORE))
-
-        # 🚨 Trigger automático al salir del input
         self.entry_ignore.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+
+        # === Only extensions ===
+        self.label_only_ext = tk.Label(self.frame, text=i18n.t("only_extensions"))
+        self.label_only_ext.pack(anchor='w', pady=(10, 0))
+        self.entry_only_ext = tk.Text(self.frame, height=2, wrap='word')
+        self.entry_only_ext.pack(fill='x', padx=5, pady=(0, 10))
+        self.entry_only_ext.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
 
         self.btn_select_project, self.status_project = self._crear_fila_boton_estado(
             i18n.t("select_project"), self.controller.seleccionar_proyecto)

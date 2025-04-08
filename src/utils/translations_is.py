@@ -21,5 +21,6 @@ translations = {
     "section_prompt_base": "Grunnprompt",
     "section_structure": "Möppubygging",
     "section_file_contents": "Efni valdra skráa",
+    "only_extensions": "Aðeins leyfðar endingar:",
     "ignore_folders_extensions": "Hunsa möppur/endingar:"
 }

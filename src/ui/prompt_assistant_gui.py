@@ -7,19 +7,18 @@ from pathlib import Path
 
 
 class PromptAssistantGUI:
-    def __init__(self, root, folders_to_ignore=None):
+    def __init__(self, root, folders_to_ignore=None, only_extensions=None):
         self.root = root
         self.folders_to_ignore = folders_to_ignore if folders_to_ignore else []
+        self.only_extensions = only_extensions if only_extensions else []
         self.archivos_seleccionados = []
 
     def seleccionar_ruta(self, tipo="archivo"):
         if tipo == "archivo":
-            ruta_seleccionada = filedialog.askopenfilename(parent=self.root, title="Seleccionar archivo")
+            return filedialog.askopenfilename(parent=self.root, title="Seleccionar archivo")
         elif tipo == "carpeta":
-            ruta_seleccionada = filedialog.askdirectory(parent=self.root, title="Seleccionar carpeta")
-        else:
-            ruta_seleccionada = None
-        return ruta_seleccionada
+            return filedialog.askdirectory(parent=self.root, title="Seleccionar carpeta")
+        return None
 
     def copiar_al_portapapeles(self, texto):
         try:
@@ -31,7 +30,7 @@ class PromptAssistantGUI:
             messagebox.showerror("Error", f"Error copiando al portapapeles: {str(e)}")
 
     def mostrar_arbol_directorios(self, carpeta):
-        self.archivos_seleccionados = []  # ✅ LIMPIAR antes de seleccionar
+        self.archivos_seleccionados = []
 
         ventana = tk.Toplevel(self.root)
         ventana.title("Seleccionar Archivos del Árbol de Directorios")
@@ -64,7 +63,6 @@ class PromptAssistantGUI:
         path_obj = Path(path)
         name = path_obj.name
 
-        # ✅ Filtro aplicado desde el principio
         if (
             name.startswith('.') or
             name in self.folders_to_ignore or
@@ -72,11 +70,15 @@ class PromptAssistantGUI:
         ):
             return None
 
+        if path_obj.is_file() and self.only_extensions:
+            if not any(name.endswith(ext) for ext in self.only_extensions):
+                return None
+
         nodo = tree.insert(padre, 'end', text=texto, open=False)
         nodos_rutas[nodo] = str(path_obj)
 
         if path_obj.is_dir():
-            tree.insert(nodo, 'end')  # Placeholder para que sea expandible
+            tree.insert(nodo, 'end')  # Hacerlo expandible
 
         return nodo
 

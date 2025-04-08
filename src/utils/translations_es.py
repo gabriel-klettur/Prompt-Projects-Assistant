@@ -21,5 +21,7 @@ translations = {
     "section_prompt_base": "Prompt Base",
     "section_structure": "Estructura de Carpetas",
     "section_file_contents": "Contenido de los Archivos Seleccionados",
+    "only_extensions": "Solo Extensiones Permitidas:",
     "ignore_folders_extensions": "Ignorar carpetas/extensiones:"
+    
 }
