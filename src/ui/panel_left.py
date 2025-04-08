@@ -24,6 +24,9 @@ class LeftPanel:
         self.entry_ignore.pack(fill='x', padx=5, pady=(0, 10))
         self.entry_ignore.insert(tk.END, ", ".join(config.FOLDERS_TO_IGNORE))
 
+        # 🚨 Trigger automático al salir del input
+        self.entry_ignore.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+
         self.btn_select_project, self.status_project = self._crear_fila_boton_estado(
             i18n.t("select_project"), self.controller.seleccionar_proyecto)
 

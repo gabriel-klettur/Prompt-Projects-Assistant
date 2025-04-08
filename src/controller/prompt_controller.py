@@ -107,3 +107,18 @@ class PromptController:
         self.view.right_panel.mostrar_prompt_final("")
 
         messagebox.showinfo("Prompt Assistant", "Todos los campos han sido limpiados correctamente.")
+
+    def on_ignore_change(self):
+        if not self.project_folder:
+            return
+
+        self.file_manager = FileManager(self.obtener_ignorados())
+
+        self.estructura = self.file_manager.genera_estructura_de_carpetas(self.project_folder)
+        self.view.center_panel.mostrar_estructura(self.estructura)
+
+        if self.selected_files:
+            self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
+            self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
+
+        self.actualizar_prompt_final()
