@@ -54,6 +54,9 @@ class PromptAssistantGUI:
         Returns:
             list: Lista de archivos seleccionados.
         """
+
+        self.archivos_seleccionados = []
+
         ventana = tk.Toplevel(self.root)
         ventana.title("Seleccionar Archivos del Árbol de Directorios")
         ancho_ventana, alto_ventana = 800, 600
