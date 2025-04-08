@@ -3,6 +3,8 @@
 import tkinter as tk
 from tkinter import ttk
 from src.utils import i18n
+import src.config as config
+
 
 class LeftPanel:
     def __init__(self, parent, controller):
@@ -13,6 +15,14 @@ class LeftPanel:
 
         self.btn_select_prompt, self.status_prompt = self._crear_fila_boton_estado(
             i18n.t("select_prompt_base"), self.controller.seleccionar_prompt_base)
+
+        # NUEVO: Input para carpetas/extensiones a ignorar
+        self.label_ignore = tk.Label(self.frame, text=i18n.t("ignore_folders_extensions"))
+        self.label_ignore.pack(anchor='w', pady=(10, 0))
+
+        self.entry_ignore = tk.Text(self.frame, height=3, wrap='word')
+        self.entry_ignore.pack(fill='x', padx=5, pady=(0, 10))
+        self.entry_ignore.insert(tk.END, ", ".join(config.FOLDERS_TO_IGNORE))
 
         self.btn_select_project, self.status_project = self._crear_fila_boton_estado(
             i18n.t("select_project"), self.controller.seleccionar_proyecto)

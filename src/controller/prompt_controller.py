@@ -18,12 +18,15 @@ class PromptController:
         self.contenido_archivos = ''
         self.prompt_final = ''
 
+    def obtener_ignorados(self):
+        texto = self.view.left_panel.entry_ignore.get("1.0", "end").strip()
+        return [item.strip() for item in texto.split(",") if item.strip()]
+
     def seleccionar_prompt_base(self):
         path = self.gui_helper.seleccionar_ruta(tipo="archivo")
         if path:
             self.prompt_base_path = path
 
-            # Actualizar estado y mostrar contenido
             self.view.left_panel.set_prompt_base_estado(True)
             with open(path, 'r', encoding='utf-8') as f:
                 contenido = f.read()
@@ -37,6 +40,7 @@ class PromptController:
         path = self.gui_helper.seleccionar_ruta(tipo="carpeta")
         if path:
             self.project_folder = path
+            self.file_manager = FileManager(self.obtener_ignorados())
 
             self.estructura = self.file_manager.genera_estructura_de_carpetas(path)
             self.view.left_panel.set_project_estado(True)
@@ -56,6 +60,7 @@ class PromptController:
             self.view.left_panel.set_archivos_estado(True, len(self.selected_files))
             self.view.left_panel.mostrar_lista_archivos(self.selected_files)
 
+            self.file_manager = FileManager(self.obtener_ignorados())
             self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
 

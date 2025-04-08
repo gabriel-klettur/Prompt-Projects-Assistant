@@ -17,8 +17,9 @@ translations = {
     "clear": "🧹 Limpiar",
     "language": "Idioma",
     "file_label": "El archivo",
+    "contains_label": "Contiene",
     "section_prompt_base": "Prompt Base",
     "section_structure": "Estructura de Carpetas",
     "section_file_contents": "Contenido de los Archivos Seleccionados",
-    "contains_label": "Contiene"
+    "ignore_folders_extensions": "Ignorar carpetas/extensiones:"
 }

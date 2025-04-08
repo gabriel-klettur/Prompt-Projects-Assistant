@@ -20,5 +20,6 @@ translations = {
     "section_prompt_base": "Prompt Base",
     "section_structure": "Folder Structure",
     "section_file_contents": "Selected Files Content",
-    "language": "Language"
+    "language": "Language",
+    "ignore_folders_extensions": "Ignore folders/extensions:"
 }

@@ -1,7 +1,7 @@
-# utils/file_manager.py
+# src/core/file_manager.py
 
 import os
-from src.utils import i18n  # 👈 Importa el sistema de traducción
+from src.utils import i18n
 
 class FileManager:
     def __init__(self, folders_to_ignore=None):
@@ -10,20 +10,20 @@ class FileManager:
         self.folders_to_ignore = folders_to_ignore
 
     def genera_estructura_de_carpetas(self, directorio):
-        """
-        Genera una representación de la estructura de directorios.
-
-        Args:
-            directorio (str): La ruta al directorio raíz.
-
-        Returns:
-            str: La representación de la estructura de directorios.
-        """
         estructura = ''
         directorio = os.path.abspath(directorio)
         for root, dirs, files in os.walk(directorio):
-            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in self.folders_to_ignore]
-            files = [f for f in files if not f.startswith('.')]
+            dirs[:] = [
+                d for d in dirs
+                if not d.startswith('.') and
+                d not in self.folders_to_ignore and
+                not any(d.endswith(ext) for ext in self.folders_to_ignore)
+            ]
+            files = [
+                f for f in files
+                if not f.startswith('.') and
+                not any(f.endswith(ext) for ext in self.folders_to_ignore)
+            ]
 
             nivel = root.replace(directorio, '').count(os.sep)
             indent = '|  ' * nivel
@@ -40,18 +40,11 @@ class FileManager:
         return estructura
 
     def extrae_contenido_archivos(self, archivos):
-        """
-        Extrae y formatea el contenido de los archivos seleccionados.
-
-        Args:
-            archivos (list): Lista de rutas de archivos.
-
-        Returns:
-            str: El contenido formateado de los archivos.
-        """
         contenido_archivos = ""
         for archivo in archivos:
             try:
+                if any(archivo.endswith(ext) for ext in self.folders_to_ignore):
+                    continue
                 with open(archivo, 'r', encoding='utf-8') as f:
                     contenido = f.read()
                     contenido_archivos += "------------------------------------------------------------------------------------------------------------------------------------\n"

@@ -20,5 +20,6 @@ translations = {
     "language": "Tungumál",
     "section_prompt_base": "Grunnprompt",
     "section_structure": "Möppubygging",
-    "section_file_contents": "Efni valdra skráa"
+    "section_file_contents": "Efni valdra skráa",
+    "ignore_folders_extensions": "Hunsa möppur/endingar:"
 }
