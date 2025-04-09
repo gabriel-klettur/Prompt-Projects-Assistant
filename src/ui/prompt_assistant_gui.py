@@ -1,8 +1,13 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
+# src/ui/prompt_assistant_gui.py
+
+import customtkinter as ctk
+from tkinter import filedialog, messagebox
 import os
 from pathlib import Path
 from src.utils import i18n
+
+import tkinter as tk
+from tkinter import ttk
 
 
 class PromptAssistantGUI:
@@ -30,25 +35,54 @@ class PromptAssistantGUI:
 
     def mostrar_arbol_directorios(self, carpeta):
         self.archivos_seleccionados = []
-        ventana = tk.Toplevel(self.root)
+
+        ventana = ctk.CTkToplevel(self.root)
         ventana.title(i18n.t("select_files_title"))
+
+        # Dimensiones y centrar en pantalla
         ancho_ventana, alto_ventana = 800, 600
         ventana.geometry(f"{ancho_ventana}x{alto_ventana}")
         self._centro_ventana(ventana, ancho_ventana, alto_ventana)
 
-        top_frame = tk.Frame(ventana)
-        top_frame.pack(fill='x', padx=10, pady=5)
+        # Modo "modal": la ventana secundaria permanece encima
+        ventana.transient(self.root)
+        ventana.grab_set()
+        ventana.lift()
 
-        tk.Label(top_frame, text=i18n.t("only_extensions"), font=("Segoe UI", 10, "bold")).pack(anchor='w')
+        # Frame superior donde colocamos la sección de extensiones
+        top_frame = ctk.CTkFrame(ventana)
+        top_frame.pack(fill="x", padx=10, pady=5)
 
-        canvas_ext = tk.Canvas(top_frame, height=35)
-        scroll_x = tk.Scrollbar(top_frame, orient='horizontal', command=canvas_ext.xview)
-        canvas_ext.configure(xscrollcommand=scroll_x.set)
+        extension_label = ctk.CTkLabel(
+            top_frame,
+            text=i18n.t("only_extensions"),
+            font=("Segoe UI", 10, "bold")
+        )
+        extension_label.pack(anchor="w")
 
-        scroll_x.pack(fill='x', side='bottom')
+        # Establecemos el color de fondo de acuerdo al estilo (en lugar de blanco)
+        bg_color = "#2a2d2e"  # Puedes ajustar este valor según tu tema
+
+        # --- Canvas con fondo adaptado y CTkScrollbar horizontal ---
+        canvas_ext = tk.Canvas(
+            top_frame,
+            height=35,
+            bg=bg_color,           # Ahora usa el color del estilo
+            highlightthickness=0,
+            borderwidth=0
+        )
         canvas_ext.pack(fill='x', side='top')
 
-        inner_frame = tk.Frame(canvas_ext)
+        scroll_x = ctk.CTkScrollbar(
+            master=top_frame,
+            orientation="horizontal",
+            command=canvas_ext.xview
+        )
+        scroll_x.pack(fill='x', side='bottom')
+        canvas_ext.configure(xscrollcommand=scroll_x.set)
+
+        # Frame interior donde van los CheckBoxes de extensiones
+        inner_frame = ctk.CTkFrame(canvas_ext, fg_color=bg_color)
         canvas_ext.create_window((0, 0), window=inner_frame, anchor='nw')
 
         def on_configure(event):
@@ -60,23 +94,49 @@ class PromptAssistantGUI:
 
         for ext in sorted(extensions):
             var = tk.BooleanVar()
-            cb = tk.Checkbutton(inner_frame, text=ext, variable=var, command=self._on_extension_checkbox_change)
+            cb = ctk.CTkCheckBox(
+                inner_frame,
+                text=ext,
+                variable=var,
+                command=self._on_extension_checkbox_change,
+                fg_color=bg_color,       # Fondo igual que el resto
+                text_color="white"       # Texto en blanco para buena legibilidad
+            )
             cb.pack(side='left', padx=5)
             self.extension_vars[ext] = var
 
-        tree_frame = tk.Frame(ventana)
-        tree_frame.pack(expand=True, fill='both')
+        # --- Sección del árbol de directorios con un CTkFrame ---
+        tree_frame = ctk.CTkFrame(ventana)
+        tree_frame.pack(expand=True, fill='both', padx=10, pady=5)
+
+        # Estilo para el Treeview
+        style = ttk.Style(tree_frame)
+        style.theme_use("clam")
+        style.configure("Treeview",
+                        background="#2a2d2e",
+                        fieldbackground="#2a2d2e",
+                        foreground="white",
+                        bordercolor="#343638",
+                        borderwidth=0)
+        style.configure("Treeview.Heading",
+                        background="#2a2d2e",
+                        foreground="white")
+        style.map("Treeview",
+                  background=[("selected", "#1f538d")],
+                  foreground=[("selected", "white")])
 
         self.tree = ttk.Treeview(tree_frame, selectmode='extended')
         self.tree.pack(expand=True, fill='both')
 
+        # Eventos en el Treeview
         self.tree.bind("<Button-1>", self._interceptar_click)
         self.tree.bind("<ButtonRelease-1>", self._on_tree_click)
 
         self.nodos_rutas = {}
         self._preparar_arbol(self.tree, carpeta, self.nodos_rutas)
 
-        btn_confirmar = tk.Button(
+        # Botón de confirmación
+        btn_confirmar = ctk.CTkButton(
             ventana,
             text=i18n.t("confirm_selection"),
             command=lambda: self._on_confirmar(self.tree, self.nodos_rutas, ventana)
@@ -94,7 +154,6 @@ class PromptAssistantGUI:
     def _extraer_extensiones_disponibles(self, carpeta):
         extensiones = set()
         carpeta = os.path.abspath(carpeta)
-
         for root, dirs, files in os.walk(carpeta):
             dirs[:] = [d for d in dirs if not d.startswith('.') and d not in self.folders_to_ignore]
             for file in files:
@@ -103,13 +162,11 @@ class PromptAssistantGUI:
                 ext = Path(file).suffix
                 if ext:
                     extensiones.add(ext)
-
         return extensiones
 
     def _insertar_nodo(self, tree, padre, texto, path, nodos_rutas):
         path_obj = Path(path)
         name = path_obj.name
-
         if (
             name.startswith('.') or
             name in self.folders_to_ignore or
@@ -121,8 +178,7 @@ class PromptAssistantGUI:
         nodos_rutas[nodo] = str(path_obj)
 
         if path_obj.is_dir():
-            tree.insert(nodo, 'end')  # Expandible
-
+            tree.insert(nodo, 'end')
         return nodo
 
     def _expandir_todo(self, tree, nodo, nodos_rutas):
