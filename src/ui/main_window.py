@@ -72,7 +72,7 @@ class MainWindow:
 
         self.design_var = ctk.StringVar(value=self.theme_name)
         diseno_selector = ctk.CTkComboBox(top_frame,
-                                        values=["Clasico", "Moderno", "Light"],
+                                        values=["Moderno", "Light"],
                                         variable=self.design_var,
                                         width=100,
                                         command=self._on_design_change)
