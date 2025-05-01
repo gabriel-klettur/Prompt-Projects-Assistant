@@ -1,8 +1,11 @@
+# src/controller/prompt_controller.py
+
 from tkinter import messagebox
 from src.core import FileManager
 from src.config import FOLDERS_TO_IGNORE
 from src.utils import i18n
-
+import re
+from pathlib import Path
 
 class PromptController:
     def __init__(self, gui_helper, view):
@@ -82,7 +85,7 @@ class PromptController:
             prompt_base,
             self.estructura,
             self.contenido_archivos
-        )        
+        )
         self.prompt_final = self.view.right_panel.obtener_prompt_final()
 
     def copiar_prompt(self):
@@ -124,3 +127,60 @@ class PromptController:
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
 
         self.actualizar_prompt_final()
+
+    def set_path_in_files(self):
+        """
+        Inserta o actualiza en cada archivo seleccionado una asignación de Path
+        desde la raíz del proyecto, antes de cualquier import o reemplazando la existente.
+        """
+        if not self.selected_files:
+            messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_files_selected"))
+            return
+
+        updated_count = 0
+        root_path = Path(self.project_folder)
+
+        for file_path in self.selected_files:
+            p = Path(file_path)
+            try:
+                text = p.read_text(encoding="utf-8")
+            except Exception as e:
+                print(f"Error leyendo {p}: {e}")
+                continue
+
+            lines = text.splitlines()
+            pattern = re.compile(r'project_file\s*=')
+            insert_line1 = "from pathlib import Path"
+            insert_line2 = f"project_file = Path(r\"{root_path.as_posix()}\") / \"{p.name}\""
+            new_lines = []
+            replaced = False
+
+            # Reemplazar si ya existe project_file
+            for line in lines:
+                if pattern.match(line):
+                    new_lines.append(insert_line1)
+                    new_lines.append(insert_line2)
+                    replaced = True
+                else:
+                    new_lines.append(line)
+
+            # Si no existía, insertar antes del primer import/from
+            if not replaced:
+                idx = next(
+                    (i for i, ln in enumerate(new_lines)
+                     if ln.startswith("import") or ln.startswith("from")),
+                    0
+                )
+                new_lines.insert(idx, insert_line2)
+                new_lines.insert(idx, insert_line1)
+
+            try:
+                p.write_text("\n".join(new_lines), encoding="utf-8")
+                updated_count += 1
+            except Exception as e:
+                print(f"Error escribiendo {p}: {e}")
+
+        # Marcar éxito y notificar
+        self.view.left_panel._set_estado(self.view.left_panel.status_set_path, True)
+        messagebox.showinfo(i18n.t("app_name"),
+                            f"Paths updated in {updated_count} file(s).")
