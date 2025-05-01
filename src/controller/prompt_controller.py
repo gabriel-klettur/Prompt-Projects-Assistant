@@ -1,5 +1,5 @@
-# src/controller/prompt_controller.py
 
+# Path: src/controller/prompt_controller.py
 from tkinter import messagebox
 from src.core import FileManager
 from src.config import FOLDERS_TO_IGNORE
@@ -35,7 +35,7 @@ class PromptController:
             self.view.left_panel.set_prompt_base_estado(True)
             with open(path, 'r', encoding='utf-8') as f:
                 contenido = f.read()
-                self.view.center_panel.mostrar_prompt_base(contenido)
+            self.view.center_panel.mostrar_prompt_base(contenido)
             self.actualizar_prompt_final()
         else:
             messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_file_selected"))
@@ -45,11 +45,9 @@ class PromptController:
         if path:
             self.project_folder = path
             self.file_manager = FileManager(self.obtener_ignorados(), self.obtener_solo_extensiones())
-
             self.estructura = self.file_manager.genera_estructura_de_carpetas(path)
             self.view.left_panel.set_project_estado(True)
             self.view.center_panel.mostrar_estructura(self.estructura)
-
             self.actualizar_prompt_final()
         else:
             messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_folder_selected"))
@@ -70,7 +68,6 @@ class PromptController:
             self.file_manager = FileManager(self.obtener_ignorados(), self.obtener_solo_extensiones())
             self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
-
             self.actualizar_prompt_final()
         else:
             messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_files_selected"))
@@ -111,7 +108,6 @@ class PromptController:
         self.view.center_panel.mostrar_estructura("")
         self.view.center_panel.mostrar_contenido_archivos("")
         self.view.right_panel.mostrar_prompt_final("")
-
         messagebox.showinfo(i18n.t("app_name"), i18n.t("fields_cleared"))
 
     def on_ignore_change(self):
@@ -125,62 +121,57 @@ class PromptController:
         if self.selected_files:
             self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
-
         self.actualizar_prompt_final()
 
     def set_path_in_files(self):
         """
-        Inserta o actualiza en cada archivo seleccionado una asignación de Path
-        desde la raíz del proyecto, antes de cualquier import o reemplazando la existente.
+        Para cada archivo seleccionado:
+        1) Elimina cualquier línea '# Path: ...' existente.
+        2) Inserta un único comentario '# Path: <ruta_relativa>' 
+           justo antes del primer 'import' o 'from'.
         """
         if not self.selected_files:
             messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_files_selected"))
             return
 
+        root = Path(self.project_folder)
         updated_count = 0
-        root_path = Path(self.project_folder)
+        pattern_old = re.compile(r'^\s*#\s*Path:')
 
-        for file_path in self.selected_files:
-            p = Path(file_path)
+        for fp in self.selected_files:
+            p = Path(fp)
             try:
-                text = p.read_text(encoding="utf-8")
+                original = p.read_text(encoding="utf-8")
             except Exception as e:
                 print(f"Error leyendo {p}: {e}")
                 continue
 
-            lines = text.splitlines()
-            pattern = re.compile(r'project_file\s*=')
-            insert_line1 = "from pathlib import Path"
-            insert_line2 = f"project_file = Path(r\"{root_path.as_posix()}\") / \"{p.name}\""
-            new_lines = []
-            replaced = False
+            # 1) Filtrar líneas antiguas
+            lines = original.splitlines()
+            without_old = [ln for ln in lines if not pattern_old.match(ln)]
 
-            # Reemplazar si ya existe project_file
-            for line in lines:
-                if pattern.match(line):
-                    new_lines.append(insert_line1)
-                    new_lines.append(insert_line2)
-                    replaced = True
-                else:
-                    new_lines.append(line)
+            # 2) Encontrar posición del primer import/from
+            insert_at = next(
+                (i for i, ln in enumerate(without_old)
+                 if ln.startswith("import ") or ln.startswith("from ")),
+                len(without_old)
+            )
 
-            # Si no existía, insertar antes del primer import/from
-            if not replaced:
-                idx = next(
-                    (i for i, ln in enumerate(new_lines)
-                     if ln.startswith("import") or ln.startswith("from")),
-                    0
-                )
-                new_lines.insert(idx, insert_line2)
-                new_lines.insert(idx, insert_line1)
+            # 3) Construir y añadir el comentario
+            rel = p.relative_to(root).as_posix()
+            comment = f"# Path: {rel}"
+            new_lines = without_old[:insert_at] + [comment] + without_old[insert_at:]
 
+            # 4) Escribir de vuelta
             try:
                 p.write_text("\n".join(new_lines), encoding="utf-8")
                 updated_count += 1
             except Exception as e:
                 print(f"Error escribiendo {p}: {e}")
 
-        # Marcar éxito y notificar
+        # Indicar éxito en la UI
         self.view.left_panel._set_estado(self.view.left_panel.status_set_path, True)
-        messagebox.showinfo(i18n.t("app_name"),
-                            f"Paths updated in {updated_count} file(s).")
+        messagebox.showinfo(
+            i18n.t("app_name"),
+            f"Path comments updated in {updated_count} file(s)."
+        )
