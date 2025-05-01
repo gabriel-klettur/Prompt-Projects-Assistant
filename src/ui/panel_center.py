@@ -1,5 +1,5 @@
-# src/ui/panel_center.py
 
+# Path: src/ui/panel_center.py
 import tkinter as tk
 import customtkinter as ctk
 from src.utils import i18n

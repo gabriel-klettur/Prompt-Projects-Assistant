@@ -1,5 +1,5 @@
-# utils/prompt_generator.py
 
+# Path: src/core/prompt_generator.py
 import re
 
 class PromptGenerator:

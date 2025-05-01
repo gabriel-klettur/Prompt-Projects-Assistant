@@ -1,5 +1,5 @@
-# src/ui/themes/light_theme.py
 
+# Path: src/ui/themes/light_theme.py
 import customtkinter as ctk
 
 def apply_light_theme(root):

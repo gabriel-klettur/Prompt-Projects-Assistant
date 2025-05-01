@@ -1,5 +1,5 @@
-# src/core/file_manager.py
 
+# Path: src/core/file_manager.py
 import os
 from src.utils import i18n
 

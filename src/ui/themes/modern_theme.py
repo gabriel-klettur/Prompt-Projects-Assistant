@@ -1,5 +1,5 @@
-# src/ui/themes/modern_theme.py
 
+# Path: src/ui/themes/modern_theme.py
 import customtkinter as ctk
 
 def apply_modern_theme(root):

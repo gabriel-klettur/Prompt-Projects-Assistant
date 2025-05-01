@@ -1,4 +1,3 @@
-# src/utils/translations_es.py
 
 translations = {
     "title": "Asistente de Código para Prompts",
@@ -40,3 +39,4 @@ translations = {
     "prompt_empty": "El prompt final está vacío.",
     "fields_cleared": "Todos los campos han sido limpiados correctamente."
 }
+# Path: src/utils/translations_es.py

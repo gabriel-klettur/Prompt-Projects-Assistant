@@ -1,5 +1,5 @@
-# src/ui/themes/classic_theme.py
 
+# Path: src/ui/themes/classic_theme.py
 import customtkinter as ctk
 
 def apply_classic_theme(root):

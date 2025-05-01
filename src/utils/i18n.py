@@ -1,5 +1,5 @@
-# src/utils/i18n.py
 
+# Path: src/utils/i18n.py
 from src.utils import translations_en, translations_es, translations_is
 
 AVAILABLE_LANGUAGES = {

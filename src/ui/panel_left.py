@@ -1,5 +1,5 @@
-# File: src/ui/panel_left.py
 
+# Path: src/ui/panel_left.py
 import customtkinter as ctk
 from src.utils import i18n
 import src.config as config

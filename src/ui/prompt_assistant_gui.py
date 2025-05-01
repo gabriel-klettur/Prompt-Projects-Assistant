@@ -1,5 +1,5 @@
-# src/ui/prompt_assistant_gui.py
 
+# Path: src/ui/prompt_assistant_gui.py
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
 import os

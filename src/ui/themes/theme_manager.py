@@ -1,5 +1,5 @@
-# src/ui/themes/theme_manager.py
 
+# Path: src/ui/themes/theme_manager.py
 import customtkinter as ctk
 from src.ui.themes.classic_theme import apply_classic_theme
 from src.ui.themes.modern_theme import apply_modern_theme

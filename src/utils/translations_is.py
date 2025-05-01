@@ -1,4 +1,3 @@
-# src/utils/translations_is.py
 
 translations = {
     "title": "Aðstoðarmaður fyrir Prompt-kóða",
@@ -40,3 +39,4 @@ translations = {
     "prompt_empty": "Lokapromptið er tómt.",
     "fields_cleared": "Öllum svæðum hefur verið hreinsað réttilega."
 }
+# Path: src/utils/translations_is.py

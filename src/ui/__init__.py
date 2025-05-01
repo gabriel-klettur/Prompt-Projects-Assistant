@@ -1,5 +1,5 @@
-# ui/__init__.py
 
+# Path: src/ui/__init__.py
 from .prompt_assistant_gui import PromptAssistantGUI
 from .main_window import MainWindow
 

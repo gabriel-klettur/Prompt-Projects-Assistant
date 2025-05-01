@@ -1,5 +1,5 @@
-# main.py
 
+# Path: src/main.py
 from src.ui.main_window import MainWindow
 
 def main():
