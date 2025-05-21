@@ -1,4 +1,3 @@
-
 # Path: src/ui/main_window.py
 import tkinter as tk
 from tkinter import ttk
@@ -27,7 +26,7 @@ class MainWindow:
         self._crear_seleccion_idioma_y_diseno()
 
         # Inicializar GUI helper y controlador
-        self.gui_helper = PromptAssistantGUI(self.root, FOLDERS_TO_IGNORE)
+        self.gui_helper = PromptAssistantGUI(self.root, FOLDERS_TO_IGNORE, None, self.theme_manager.get_styles())
         self.controller = PromptController(self.gui_helper, self)
 
         # Crear contenedor de paneles
@@ -78,7 +77,7 @@ class MainWindow:
                                         command=self._on_design_change)
         diseno_selector.pack(side="left", padx=5)
 
-        # 🔧 Guarda widgets para actualizar luego
+        # Guarda widgets para actualizar luego
         self.top_widgets = [top_frame, idioma_label, idioma_selector, diseno_label, diseno_selector]
 
     def _on_language_change(self, nuevo_idioma):
@@ -92,9 +91,18 @@ class MainWindow:
     def _on_design_change(self, nuevo_diseno):
         print(f"[Diseño] Cambiado a: {nuevo_diseno}")
         if nuevo_diseno != self.theme_name:
-            self.root.destroy()
-            self.__init__(design_mode=nuevo_diseno)
-            self.run()
+            # Cambiar tema dinámicamente sin destruir la ventana
+            self.theme_name = nuevo_diseno
+            self.theme_manager.theme_name = nuevo_diseno
+            self.theme_manager.apply_theme()
+            estilos = self.theme_manager.get_styles()
+            # Actualizar estilos en la barra superior y paneles
+            self._update_top_styles(estilos)
+            self.left_panel.update_styles(estilos)
+            self.center_panel.update_styles(estilos)
+            self.right_panel.update_styles(estilos)
+            # Actualizar estilos en diálogo de selección de archivos
+            self.gui_helper.theme_styles = estilos
 
     def _crear_main_paned(self):
         main_paned = tk.PanedWindow(self.root, orient='horizontal',
