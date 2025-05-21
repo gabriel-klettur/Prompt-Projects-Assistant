@@ -1,4 +1,3 @@
-
 # Path: src/ui/prompt_assistant_gui.py
 import customtkinter as ctk
 from tkinter import filedialog, messagebox
@@ -11,11 +10,12 @@ from tkinter import ttk
 
 
 class PromptAssistantGUI:
-    def __init__(self, root, folders_to_ignore=None, only_extensions=None):
+    def __init__(self, root, folders_to_ignore=None, only_extensions=None, theme_styles=None):
         self.root = root
         self.folders_to_ignore = folders_to_ignore if folders_to_ignore else []
         self.only_extensions = only_extensions if only_extensions else []
         self.archivos_seleccionados = []
+        self.theme_styles = theme_styles or {}
 
     def seleccionar_ruta(self, tipo="archivo"):
         if tipo == "archivo":
@@ -60,14 +60,17 @@ class PromptAssistantGUI:
         )
         extension_label.pack(anchor="w")
 
-        # Establecemos el color de fondo de acuerdo al estilo (en lugar de blanco)
-        bg_color = "#2a2d2e"  # Puedes ajustar este valor según tu tema
+        # Obtener colores del tema actual
+        bg_color = self.theme_styles.get("bg_color", "#2a2d2e")
+        fg_color = self.theme_styles.get("fg_color", "white")
+        highlight_color = self.theme_styles.get("button_bg", "#1f538d")
+        selected_fg = self.theme_styles.get("button_fg", "white")
 
         # --- Canvas con fondo adaptado y CTkScrollbar horizontal ---
         canvas_ext = tk.Canvas(
             top_frame,
             height=35,
-            bg=bg_color,           # Ahora usa el color del estilo
+            bg=bg_color,           # Ahora usa el color del tema
             highlightthickness=0,
             borderwidth=0
         )
@@ -99,8 +102,8 @@ class PromptAssistantGUI:
                 text=ext,
                 variable=var,
                 command=self._on_extension_checkbox_change,
-                fg_color=bg_color,       # Fondo igual que el resto
-                text_color="white"       # Texto en blanco para buena legibilidad
+                fg_color=bg_color,       # Fondo igual que el tema
+                text_color=fg_color      # Texto según tema
             )
             cb.pack(side='left', padx=5)
             self.extension_vars[ext] = var
@@ -113,17 +116,16 @@ class PromptAssistantGUI:
         style = ttk.Style(tree_frame)
         style.theme_use("clam")
         style.configure("Treeview",
-                        background="#2a2d2e",
-                        fieldbackground="#2a2d2e",
-                        foreground="white",
-                        bordercolor="#343638",
+                        background=bg_color,
+                        fieldbackground=bg_color,
+                        foreground=fg_color,
                         borderwidth=0)
         style.configure("Treeview.Heading",
-                        background="#2a2d2e",
-                        foreground="white")
+                        background=bg_color,
+                        foreground=fg_color)
         style.map("Treeview",
-                  background=[("selected", "#1f538d")],
-                  foreground=[("selected", "white")])
+                  background=[("selected", highlight_color)],
+                  foreground=[("selected", selected_fg)])
 
         self.tree = ttk.Treeview(tree_frame, selectmode='extended')
         self.tree.pack(expand=True, fill='both')
