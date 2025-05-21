@@ -1,10 +1,10 @@
-
 # Path: src/controller/prompt_controller.py
 from tkinter import messagebox
 from src.core import FileManager
 from src.config import FOLDERS_TO_IGNORE
 from src.utils import i18n
 import re
+import json
 from pathlib import Path
 
 class PromptController:
@@ -19,6 +19,17 @@ class PromptController:
         self.estructura = ''
         self.contenido_archivos = ''
         self.prompt_final = ''
+        self.saved_ignore = []
+        self.saved_only_extensions = []
+        try:
+            settings_file = Path("settings.json")
+            if settings_file.exists():
+                data = settings_file.read_text(encoding="utf-8")
+                obj = json.loads(data)
+                self.saved_ignore = obj.get("ignore", [])
+                self.saved_only_extensions = obj.get("only_extensions", [])
+        except Exception as e:
+            print(f"Error loading settings: {e}")
 
     def obtener_ignorados(self):
         texto = self.view.left_panel.entry_ignore.get("1.0", "end").strip()
@@ -122,6 +133,19 @@ class PromptController:
             self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
         self.actualizar_prompt_final()
+
+    def save_settings(self):
+        ignorados = self.obtener_ignorados()
+        only_exts = self.obtener_solo_extensiones()
+        settings = {"ignore": ignorados, "only_extensions": only_exts}
+        settings_file = Path("settings.json")
+        try:
+            settings_file.write_text(json.dumps(settings, indent=2), encoding="utf-8")
+            self.view.left_panel._set_estado(self.view.left_panel.status_save, True)
+            messagebox.showinfo(i18n.t("app_name"), i18n.t("save_success"))
+        except Exception as e:
+            self.view.left_panel._set_estado(self.view.left_panel.status_save, False)
+            messagebox.showerror(i18n.t("app_name"), f"{i18n.t('save_error')} {e}")
 
     def set_path_in_files(self):
         """

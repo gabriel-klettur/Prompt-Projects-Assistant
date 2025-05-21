@@ -1,4 +1,3 @@
-
 # Path: src/ui/panel_left.py
 import customtkinter as ctk
 from src.utils import i18n
@@ -35,7 +34,7 @@ class LeftPanel:
 
         self.entry_ignore = ctk.CTkTextbox(self.frame, height=60)
         self.entry_ignore.pack(fill='x', padx=10)
-        self.entry_ignore.insert("0.0", ", ".join(config.FOLDERS_TO_IGNORE))
+        self.entry_ignore.insert("0.0", ", ".join(self.controller.saved_ignore if self.controller.saved_ignore else config.FOLDERS_TO_IGNORE))
         self.entry_ignore.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
 
         self.label_only_ext = ctk.CTkLabel(
@@ -46,7 +45,28 @@ class LeftPanel:
 
         self.entry_only_ext = ctk.CTkTextbox(self.frame, height=40)
         self.entry_only_ext.pack(fill='x', padx=10)
+        self.entry_only_ext.insert("0.0", ", ".join(self.controller.saved_only_extensions))
         self.entry_only_ext.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+
+        # Nuevo botón para guardar configuraciones de ignore/extensions
+        self.btn_save_settings = ctk.CTkButton(
+            self.frame,
+            text=i18n.t("save_settings"),
+            command=self.controller.save_settings,
+            fg_color="#4CAF50",
+            hover_color="#45a049",
+            state="normal"
+        )
+        self.btn_save_settings.pack(pady=5, padx=10, fill="x")
+
+        # Estado del guardado
+        self.status_save = ctk.CTkLabel(
+            self.frame,
+            text="❌",
+            text_color="red",
+            width=20
+        )
+        self.status_save.pack(pady=2, padx=10)
 
         # Botón para seleccionar carpeta de proyecto
         self.btn_select_project = ctk.CTkButton(
@@ -113,6 +133,7 @@ class LeftPanel:
             self.btn_select_prompt, self.status_prompt,
             self.label_ignore, self.entry_ignore,
             self.label_only_ext, self.entry_only_ext,
+            self.btn_save_settings, self.status_save,
             self.btn_select_project, self.status_project,
             self.btn_select_files, self.status_files,
             self.btn_set_path, self.status_set_path,

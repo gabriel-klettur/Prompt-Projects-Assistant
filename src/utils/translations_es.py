@@ -1,4 +1,3 @@
-
 translations = {
     "title": "Asistente de Código para Prompts",
     "actions": "Acciones",
@@ -30,6 +29,9 @@ translations = {
     "select_file": "Seleccionar archivo",
     "select_folder": "Seleccionar carpeta",
     "ignore_folders_extensions": "Ignorar carpetas/extensiones:",
+    "save_settings": "Guardar configuración",
+    "save_success": "Configuración guardada con éxito.",
+    "save_error": "Error guardando configuración:",
     "warning_title": "Advertencia",
     "no_file_selected": "No se seleccionó ningún archivo.",
     "no_folder_selected": "No se seleccionó ninguna carpeta.",

@@ -1,0 +1,17 @@
+{
+  "ignore": [
+    "__pycache__",
+    "venv",
+    "venvTesting",
+    "node_modules",
+    "env",
+    "public",
+    "build",
+    "coverage",
+    "exe",
+    "__init__.py",
+    "docs",
+    "assets"
+  ],
+  "only_extensions": []
+}

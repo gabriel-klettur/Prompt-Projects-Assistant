@@ -1,4 +1,3 @@
-
 translations = {
     "title": "Prompt Code Assistant",
     "actions": "Actions",
@@ -23,6 +22,9 @@ translations = {
     "only_extensions": "Only Allowed Extensions:",
     "only_extensions_checkbox": "Only extensions:",    
     "ignore_folders_extensions": "Ignore folders/extensions:",
+    "save_settings": "Save settings",
+    "save_success": "Settings saved successfully.",
+    "save_error": "Error saving settings:",
     "select_files_title": "Select Files from Project Tree",
     "confirm_selection": "Confirm Selection",
     "only_extensions": "Only extensions:",
