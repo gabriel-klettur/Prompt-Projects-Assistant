@@ -1,8 +1,8 @@
-
 # Path: src/ui/panel_right.py
 import tkinter as tk
 import customtkinter as ctk
 from src.utils import i18n
+import tiktoken
 
 class RightPanel:
     def __init__(self, parent, controller):
@@ -24,13 +24,19 @@ class RightPanel:
         self.btn_limpiar = ctk.CTkButton(botones_frame, text=i18n.t("clear"), command=self.controller.limpiar_todo, width=150)
         self.btn_limpiar.pack(side="left", padx=10)
 
+        # Label para contador de tokens
+        self.label_token_count = ctk.CTkLabel(self.frame, text="Tokens: 0")
+        self.label_token_count.pack(anchor='w', padx=10)
+
         self.widgets = [
-            self.title_label, self.text_prompt_final, self.btn_copiar, self.btn_limpiar
+            self.title_label, self.text_prompt_final, self.btn_copiar, self.btn_limpiar, self.label_token_count
         ]
 
     def mostrar_prompt_final(self, prompt):
         self.text_prompt_final.delete("1.0", tk.END)
         self.text_prompt_final.insert(tk.END, prompt)
+        # Actualizar contador de tokens
+        self.update_token_count()
 
     def construir_prompt_final(self, prompt_base, estructura, archivos):
         self.text_prompt_final.delete("1.0", tk.END)
@@ -46,7 +52,8 @@ class RightPanel:
         if archivos:
             self._insertar_separador_titulado(i18n.t("section_file_contents"))
             self.text_prompt_final.insert(tk.END, archivos, "archivos")
-
+        # Actualizar contador de tokens
+        self.update_token_count()
         return self.text_prompt_final.get("1.0", tk.END).strip()
 
     def _insertar_separador_titulado(self, titulo):
@@ -56,6 +63,16 @@ class RightPanel:
 
     def obtener_prompt_final(self):
         return self.text_prompt_final.get("1.0", tk.END).strip()
+
+    def update_token_count(self):
+        """Actualiza la etiqueta con el número de tokens del prompt generado."""
+        prompt = self.obtener_prompt_final()
+        try:
+            enc = tiktoken.get_encoding("cl100k_base")
+        except AttributeError:
+            enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        count = len(enc.encode(prompt))
+        self.label_token_count.configure(text=f"Tokens: {count}")
 
     def update_styles(self, estilos: dict):
         for widget in self.widgets:
