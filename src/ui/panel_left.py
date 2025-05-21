@@ -177,8 +177,9 @@ class LeftPanel:
         self._set_estado(self.status_set_path, False)
 
     def _set_estado(self, label, estado: bool):
-        icon = "✔️" if estado else "❌"
-        text_color = "green" if estado else "red"
+        # Usar botones icónicos en lugar de emojis
+        icon = "✓" if estado else "✗"
+        text_color = "#4CAF50" if estado else "#E74C3C"
         label.configure(text=icon, text_color=text_color)
 
     def mostrar_lista_archivos(self, archivos: list):
@@ -201,8 +202,8 @@ class LeftPanel:
                         text_color=estilos.get("button_fg", None)
                     )
                 elif isinstance(widget, ctk.CTkLabel):
+                    # Solo actualizar color de texto para evitar fondo blanco en modo Light
                     widget.configure(
-                        fg_color=estilos.get("bg_color", None),
                         text_color=estilos.get("fg_color", None)
                     )
                 elif isinstance(widget, ctk.CTkTextbox):

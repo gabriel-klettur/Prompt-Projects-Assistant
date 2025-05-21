@@ -1,4 +1,3 @@
-
 # Path: src/ui/themes/modern_theme.py
 import customtkinter as ctk
 
@@ -12,5 +11,8 @@ def apply_modern_theme(root):
         "fg_color": "white",
         "entry_bg": "#1e1f22",
         "button_bg": "#3b8ed0",
-        "button_fg": "white"
+        "button_fg": "white",
+        "corner_radius": 8,
+        "border_width": 1,
+        "button_hover": "#5aaae0"
     }

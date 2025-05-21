@@ -18,7 +18,7 @@ class RightPanel:
         botones_frame = ctk.CTkFrame(self.frame)
         botones_frame.pack(pady=10, padx=10)
 
-        self.btn_copiar = ctk.CTkButton(botones_frame, text=i18n.t("copy"), command=self.controller.copiar_prompt, width=150)
+        self.btn_copiar = ctk.CTkButton(botones_frame, text=i18n.t("copy"), command=self.controller.copiar_prompt, width=150, corner_radius=6, hover_color="#5aaae0")
         self.btn_copiar.pack(side="left", padx=10)
 
         self.btn_limpiar = ctk.CTkButton(botones_frame, text=i18n.t("clear"), command=self.controller.limpiar_todo, width=150)

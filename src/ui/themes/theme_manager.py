@@ -1,4 +1,3 @@
-
 # Path: src/ui/themes/theme_manager.py
 import customtkinter as ctk
 from src.ui.themes.classic_theme import apply_classic_theme
@@ -12,7 +11,7 @@ class ThemeManager:
         self.theme_styles = {}
 
     def apply_theme(self):
-        print(f"[ThemeManager] Aplicando tema: {self.theme_name}")  # ✅ Debug
+        print(f"[ThemeManager] Aplicando tema: {self.theme_name}")  # Debug
         if self.theme_name == "Moderno":
             ctk.set_appearance_mode("Dark")
             self.theme_styles = apply_modern_theme(self.root)
@@ -20,6 +19,7 @@ class ThemeManager:
             ctk.set_appearance_mode("Light")
             self.theme_styles = apply_light_theme(self.root)
         elif self.theme_name == "Clasico":
+            ctk.set_appearance_mode("System")  # No cambia el appearance_mode para clásico
             self.theme_styles = apply_classic_theme(self.root)
         else:
             # Fallback

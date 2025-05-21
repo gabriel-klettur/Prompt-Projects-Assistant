@@ -1,4 +1,3 @@
-
 # Path: src/ui/panel_center.py
 import tkinter as tk
 import customtkinter as ctk
@@ -8,7 +7,10 @@ class CenterPanel:
     def __init__(self, parent):
         self.frame = ctk.CTkFrame(parent)
 
-        self.title_label = ctk.CTkLabel(self.frame, text=i18n.t("context_view"), font=("Segoe UI", 14, "bold"))
+        self.title_label = ctk.CTkLabel(self.frame, text=i18n.t("context_view"), font=("Segoe UI", 14, "bold"),
+            corner_radius=0,
+            text_color=self.theme_styles.get("fg_color", None) if hasattr(self, 'theme_styles') else None
+        )
         self.title_label.pack(anchor='w', padx=10, pady=(10, 5))
 
         self.label_prompt_base = ctk.CTkLabel(self.frame, text=i18n.t("prompt_base"))
@@ -52,13 +54,12 @@ class CenterPanel:
 
     def update_styles(self, estilos: dict):
         for widget in self.widgets:
-            if isinstance(widget, (ctk.CTkLabel, ctk.CTkTextbox)):
+            if isinstance(widget, ctk.CTkTextbox):
+                # Mantener fondo transparente en modo Light para CTkLabel, solo ajustar fuente
                 if "font" in estilos:
                     widget.configure(font=estilos["font"])
             try:
                 if "fg_color" in estilos:
                     widget.configure(fg_color=estilos["bg_color"])
-                if "text_color" in estilos:
-                    widget.configure(text_color=estilos["fg_color"])
             except:
                 pass
