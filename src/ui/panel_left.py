@@ -190,13 +190,30 @@ class LeftPanel:
 
     def update_styles(self, estilos: dict):
         for widget in self.widgets:
-            if isinstance(widget, (ctk.CTkLabel, ctk.CTkTextbox, ctk.CTkButton, ctk.CTkComboBox)):
-                if "font" in estilos:
-                    widget.configure(font=estilos["font"])
+            # Fuente
+            if "font" in estilos:
+                widget.configure(font=estilos["font"])
             try:
-                if "fg_color" in estilos:
-                    widget.configure(fg_color=estilos["bg_color"])
-                if "text_color" in estilos:
-                    widget.configure(text_color=estilos["fg_color"])
+                if isinstance(widget, ctk.CTkButton):
+                    # Actualizar color de botones
+                    widget.configure(
+                        fg_color=estilos.get("button_bg", None),
+                        text_color=estilos.get("button_fg", None)
+                    )
+                elif isinstance(widget, ctk.CTkLabel):
+                    widget.configure(
+                        fg_color=estilos.get("bg_color", None),
+                        text_color=estilos.get("fg_color", None)
+                    )
+                elif isinstance(widget, ctk.CTkTextbox):
+                    widget.configure(
+                        fg_color=estilos.get("entry_bg", None),
+                        text_color=estilos.get("fg_color", None)
+                    )
+                elif isinstance(widget, ctk.CTkComboBox):
+                    widget.configure(
+                        fg_color=estilos.get("bg_color", None),
+                        text_color=estilos.get("fg_color", None)
+                    )
             except:
                 pass

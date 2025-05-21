@@ -51,6 +51,13 @@ class MainWindow:
         container.grid_columnconfigure(2, weight=1)
         container.grid_rowconfigure(0, weight=1)
 
+        # Aplicar estilos a widgets existentes
+        estilos = self.theme_manager.get_styles()
+        self._update_top_styles(estilos)
+        self.left_panel.update_styles(estilos)
+        self.center_panel.update_styles(estilos)
+        self.right_panel.update_styles(estilos)
+
     def _crear_seleccion_idioma_y_diseno(self):
         top_frame = ctk.CTkFrame(self.root, height=50)
         top_frame.pack(fill="x", padx=10, pady=(10, 0))

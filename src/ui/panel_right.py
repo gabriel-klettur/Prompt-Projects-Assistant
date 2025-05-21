@@ -109,14 +109,40 @@ class RightPanel:
 
     def update_styles(self, estilos: dict):
         for widget in self.widgets:
-            if isinstance(widget, (ctk.CTkLabel, ctk.CTkTextbox, ctk.CTkButton)):
-                if "font" in estilos:
-                    widget.configure(font=estilos["font"])
+            # Configurar fuente si aplica
+            if "font" in estilos:
+                widget.configure(font=estilos["font"])
             try:
-                if "fg_color" in estilos:
-                    widget.configure(fg_color=estilos["bg_color"])
-                if "text_color" in estilos:
-                    widget.configure(text_color=estilos["fg_color"])
+                if isinstance(widget, ctk.CTkButton):
+                    # Botones usan colores específicos
+                    if "button_bg" in estilos:
+                        widget.configure(fg_color=estilos["button_bg"])
+                    if "button_fg" in estilos:
+                        widget.configure(text_color=estilos["button_fg"])
+                elif isinstance(widget, ctk.CTkLabel):
+                    # Etiquetas usan bg_color y fg_color
+                    if "bg_color" in estilos:
+                        widget.configure(fg_color=estilos["bg_color"])
+                    if "fg_color" in estilos:
+                        widget.configure(text_color=estilos["fg_color"])
+                elif isinstance(widget, ctk.CTkTextbox):
+                    # Textbox usa entry_bg y fg_color
+                    if "entry_bg" in estilos:
+                        widget.configure(fg_color=estilos["entry_bg"])
+                    if "text_color" in estilos:
+                        widget.configure(text_color=estilos["fg_color"])
+                elif isinstance(widget, ctk.CTkComboBox):
+                    # ComboBox usa bg_color y fg_color
+                    if "bg_color" in estilos:
+                        widget.configure(fg_color=estilos["bg_color"])
+                    if "fg_color" in estilos:
+                        widget.configure(text_color=estilos["fg_color"])
+                elif isinstance(widget, ctk.CTkEntry):
+                    # Entry usa entry_bg y fg_color
+                    if "entry_bg" in estilos:
+                        widget.configure(fg_color=estilos["entry_bg"])
+                    if "text_color" in estilos:
+                        widget.configure(text_color=estilos["fg_color"])
             except:
                 pass
 
