@@ -42,6 +42,10 @@ translations = {
     "project_folder_required": "Please select a project folder first.",
     "no_files_selected": "No files were selected.",
     "prompt_empty": "The final prompt is empty.",
-    "fields_cleared": "All fields were successfully cleared."
+    "fields_cleared": "All fields were successfully cleared.",
+    "tokens_per_part": "Tokens per part:",
+    "split_into": "Split into",
+    "part": "Part",
+    "context_intro": "I will now provide the context and split the question into parts."
 }
 # Path: src/utils/translations_en.py

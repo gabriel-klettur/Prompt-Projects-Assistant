@@ -1,4 +1,3 @@
-
 translations = {
     "title": "Aðstoðarmaður fyrir Prompt-kóða",
     "actions": "Aðgerðir",
@@ -12,8 +11,8 @@ translations = {
     "final_prompt": "Lokaúttak (prompt):",
     "context_view": "Samhengissýn",
     "generated_prompt": "Útbúinn Prompt",
-    "copy": "📋 Afrita",
-    "clear": "🧹 Hreinsa",
+    "copy": " Afrita",
+    "clear": " Hreinsa",
     "file_label": "Skráin",
     "contains_label": "Inniheldur",
     "language": "Tungumál",
@@ -37,6 +36,10 @@ translations = {
     "project_folder_required": "Veldu fyrst verkefnamöppu.",
     "no_files_selected": "Engar skrár voru valdar.",
     "prompt_empty": "Lokapromptið er tómt.",
-    "fields_cleared": "Öllum svæðum hefur verið hreinsað réttilega."
+    "fields_cleared": "Öllum svæðum hefur verið hreinsað réttilega.",
+    "tokens_per_part": "Tákn per hluta:",
+    "split_into": "Skipta í",
+    "part": "Hluti",
+    "context_intro": "Ég mun nú veita samhengi og skipta spurningunni í hluta."
 }
 # Path: src/utils/translations_is.py
