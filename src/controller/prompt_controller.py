@@ -108,6 +108,13 @@ class PromptController:
         else:
             messagebox.showwarning(i18n.t("warning_title"), i18n.t("prompt_empty"))
 
+    def copiar_parte_prompt(self, part):
+        """Copia la parte seleccionada del prompt al portapapeles."""
+        if part:
+            self.gui_helper.copiar_al_portapapeles(part)
+        else:
+            messagebox.showwarning(i18n.t("warning_title"), i18n.t("prompt_empty"))
+
     def limpiar_todo(self):
         self.prompt_base_path = None
         self.project_folder = None

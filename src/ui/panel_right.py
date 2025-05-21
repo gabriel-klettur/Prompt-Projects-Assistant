@@ -28,8 +28,34 @@ class RightPanel:
         self.label_token_count = ctk.CTkLabel(self.frame, text="Tokens: 0")
         self.label_token_count.pack(anchor='w', padx=10)
 
+        # Frame para separar el prompt en partes
+        self.split_frame = ctk.CTkFrame(self.frame)
+        self.split_frame.pack(pady=5, padx=10, fill="x")
+
+        # Campo para tamaño de separación (tokens por parte)
+        self.size_label = ctk.CTkLabel(self.split_frame, text="Tokens por parte:")
+        self.size_label.pack(side="left", padx=5)
+        self.chunk_size_entry = ctk.CTkEntry(self.split_frame, width=100)
+        self.chunk_size_entry.insert(0, "50000")
+        self.chunk_size_entry.pack(side="left", padx=5)
+
+        # Botón para separar el prompt en partes
+        self.btn_split = ctk.CTkButton(self.split_frame, text="Separar en: 0", command=self.split_prompt, width=150)
+        self.btn_split.pack(side="left", padx=10)
+
+        # Menú de opciones para seleccionar la parte a copiar
+        self.part_optionmenu = ctk.CTkComboBox(self.split_frame, values=["copy"], command=self.on_part_selected, width=150)
+        self.part_optionmenu.pack(side="left", padx=10)
+        # Valor inicial 'copy' para mostrar y luego deshabilitar
+        self.part_optionmenu.set("copy")
+        self.part_optionmenu.configure(state="disabled")
+
+        # Lista de partes del prompt
+        self.prompt_parts = []
+
         self.widgets = [
-            self.title_label, self.text_prompt_final, self.btn_copiar, self.btn_limpiar, self.label_token_count
+            self.title_label, self.text_prompt_final, self.btn_copiar, self.btn_limpiar, self.label_token_count,
+            self.btn_split, self.part_optionmenu, self.size_label, self.chunk_size_entry
         ]
 
     def mostrar_prompt_final(self, prompt):
@@ -73,6 +99,13 @@ class RightPanel:
             enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
         count = len(enc.encode(prompt))
         self.label_token_count.configure(text=f"Tokens: {count}")
+        # Actualizar etiqueta del botón según número de partes
+        try:
+            size = int(self.chunk_size_entry.get())
+        except ValueError:
+            size = 50000
+        num_parts = (count + size - 1) // size if count > 0 else 0
+        self.btn_split.configure(text=f"Separar en: {num_parts}")
 
     def update_styles(self, estilos: dict):
         for widget in self.widgets:
@@ -86,3 +119,40 @@ class RightPanel:
                     widget.configure(text_color=estilos["fg_color"])
             except:
                 pass
+
+    # -------- Métodos para separar el prompt en partes --------
+    def split_prompt(self):
+        prompt = self.obtener_prompt_final()
+        if not prompt:
+            return
+        try:
+            enc = tiktoken.get_encoding("cl100k_base")
+        except AttributeError:
+            enc = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        tokens = enc.encode(prompt)
+        try:
+            size = int(self.chunk_size_entry.get())
+        except ValueError:
+            size = 50000
+        chunk_size = size
+        parts = [enc.decode(tokens[i:i+chunk_size]) for i in range(0, len(tokens), chunk_size)]
+        self.prompt_parts = parts
+        values = [f"Parte {i+1}" for i in range(len(parts))]
+        self.part_optionmenu.configure(values=values)
+        self.part_optionmenu.configure(state="normal")
+        if values:
+            self.part_optionmenu.set(values[0])
+
+    def on_part_selected(self, choice):
+        try:
+            index = int(choice.split()[-1]) - 1
+            part = self.prompt_parts[index]
+            # Preparar mensaje con comillas quintuple y etiqueta de parte
+            if index == 0:
+                message = (f"A continuación proporcionaré el contexto y dividiré la pregunta en partes.\n"
+                           f"PARTE 1: '''''{part}'''''")
+            else:
+                message = f"PARTE {index+1}: '''''{part}'''''"
+            self.controller.copiar_parte_prompt(message)
+        except Exception:
+            pass
