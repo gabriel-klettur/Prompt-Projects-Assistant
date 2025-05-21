@@ -1,5 +1,5 @@
 {
-  "ignore": [
+  "ignore_structure": [
     "__pycache__",
     "venv",
     "venvTesting",
@@ -12,6 +12,22 @@
     "__init__.py",
     "docs",
     "assets"
+  ],
+  "ignore_files": [
+    "__pycache__",
+    "venv",
+    "venvTesting",
+    "node_modules",
+    "env",
+    "public",
+    "build",
+    "coverage",
+    "exe",
+    "__init__.py",
+    "docs",
+    "assets",
+    "data",
+    "scripts"
   ],
   "only_extensions": []
 }

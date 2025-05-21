@@ -26,16 +26,17 @@ class LeftPanel:
         self.status_prompt.pack(pady=2, padx=10)
 
         # Campos de ignore y extensiones
-        self.label_ignore = ctk.CTkLabel(
+        # Ignore for folder structure
+        self.label_ignore_structure = ctk.CTkLabel(
             self.frame,
-            text=i18n.t("ignore_folders_extensions")
+            text=i18n.t("ignore_structure")
         )
-        self.label_ignore.pack(anchor='w', padx=10, pady=(15, 5))
+        self.label_ignore_structure.pack(anchor='w', padx=10, pady=(15, 5))
 
-        self.entry_ignore = ctk.CTkTextbox(self.frame, height=60)
-        self.entry_ignore.pack(fill='x', padx=10)
-        self.entry_ignore.insert("0.0", ", ".join(self.controller.saved_ignore if self.controller.saved_ignore else config.FOLDERS_TO_IGNORE))
-        self.entry_ignore.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+        self.entry_ignore_structure = ctk.CTkTextbox(self.frame, height=60)
+        self.entry_ignore_structure.pack(fill='x', padx=10)
+        self.entry_ignore_structure.insert("0.0", ", ".join(self.controller.saved_ignore_structure if self.controller.saved_ignore_structure else config.FOLDERS_TO_IGNORE))
+        self.entry_ignore_structure.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
 
         self.label_only_ext = ctk.CTkLabel(
             self.frame,
@@ -48,7 +49,19 @@ class LeftPanel:
         self.entry_only_ext.insert("0.0", ", ".join(self.controller.saved_only_extensions))
         self.entry_only_ext.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
 
-        # Nuevo botón para guardar configuraciones de ignore/extensions
+        # Campos de ignore para selección de archivos
+        self.label_ignore_files = ctk.CTkLabel(
+            self.frame,
+            text=i18n.t("ignore_select_files")
+        )
+        self.label_ignore_files.pack(anchor='w', padx=10, pady=(15, 5))
+
+        self.entry_ignore_files = ctk.CTkTextbox(self.frame, height=60)
+        self.entry_ignore_files.pack(fill='x', padx=10)
+        self.entry_ignore_files.insert("0.0", ", ".join(self.controller.saved_ignore_files if self.controller.saved_ignore_files else config.FOLDERS_TO_IGNORE))
+        self.entry_ignore_files.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+
+        # Save settings button (moved below file ignore)
         self.btn_save_settings = ctk.CTkButton(
             self.frame,
             text=i18n.t("save_settings"),
@@ -58,8 +71,7 @@ class LeftPanel:
             state="normal"
         )
         self.btn_save_settings.pack(pady=5, padx=10, fill="x")
-
-        # Estado del guardado
+        # Estado del guardado general
         self.status_save = ctk.CTkLabel(
             self.frame,
             text="❌",
@@ -131,8 +143,9 @@ class LeftPanel:
         # Agrupamos widgets para estilos
         self.widgets = [
             self.btn_select_prompt, self.status_prompt,
-            self.label_ignore, self.entry_ignore,
+            self.label_ignore_structure, self.entry_ignore_structure,
             self.label_only_ext, self.entry_only_ext,
+            self.label_ignore_files, self.entry_ignore_files,
             self.btn_save_settings, self.status_save,
             self.btn_select_project, self.status_project,
             self.btn_select_files, self.status_files,

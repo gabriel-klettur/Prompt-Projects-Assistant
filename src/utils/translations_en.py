@@ -22,6 +22,8 @@ translations = {
     "only_extensions": "Only Allowed Extensions:",
     "only_extensions_checkbox": "Only extensions:",    
     "ignore_folders_extensions": "Ignore folders/extensions:",
+    "ignore_structure": "Ignore folder structure:",
+    "ignore_select_files": "Ignore folders/extensions for file selection:",
     "save_settings": "Save settings",
     "save_success": "Settings saved successfully.",
     "save_error": "Error saving settings:",

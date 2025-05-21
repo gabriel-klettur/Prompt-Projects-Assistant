@@ -19,20 +19,26 @@ class PromptController:
         self.estructura = ''
         self.contenido_archivos = ''
         self.prompt_final = ''
-        self.saved_ignore = []
+        self.saved_ignore_structure = []
+        self.saved_ignore_files = []
         self.saved_only_extensions = []
         try:
             settings_file = Path("settings.json")
             if settings_file.exists():
                 data = settings_file.read_text(encoding="utf-8")
                 obj = json.loads(data)
-                self.saved_ignore = obj.get("ignore", [])
+                self.saved_ignore_structure = obj.get("ignore_structure", [])
+                self.saved_ignore_files = obj.get("ignore_files", [])
                 self.saved_only_extensions = obj.get("only_extensions", [])
         except Exception as e:
             print(f"Error loading settings: {e}")
 
-    def obtener_ignorados(self):
-        texto = self.view.left_panel.entry_ignore.get("1.0", "end").strip()
+    def obtener_ignorados_estructura(self):
+        texto = self.view.left_panel.entry_ignore_structure.get("1.0", "end").strip()
+        return [item.strip() for item in texto.split(",") if item.strip()]
+
+    def obtener_ignorados_archivos(self):
+        texto = self.view.left_panel.entry_ignore_files.get("1.0", "end").strip()
         return [item.strip() for item in texto.split(",") if item.strip()]
 
     def obtener_solo_extensiones(self):
@@ -55,7 +61,7 @@ class PromptController:
         path = self.gui_helper.seleccionar_ruta(tipo="carpeta")
         if path:
             self.project_folder = path
-            self.file_manager = FileManager(self.obtener_ignorados(), self.obtener_solo_extensiones())
+            self.file_manager = FileManager(self.obtener_ignorados_estructura(), self.obtener_solo_extensiones())
             self.estructura = self.file_manager.genera_estructura_de_carpetas(path)
             self.view.left_panel.set_project_estado(True)
             self.view.center_panel.mostrar_estructura(self.estructura)
@@ -68,7 +74,7 @@ class PromptController:
             messagebox.showerror(i18n.t("error_title"), i18n.t("project_folder_required"))
             return
 
-        self.gui_helper.folders_to_ignore = self.obtener_ignorados()
+        self.gui_helper.folders_to_ignore = self.obtener_ignorados_archivos()
         self.gui_helper.only_extensions = self.obtener_solo_extensiones()
 
         self.selected_files = self.gui_helper.mostrar_arbol_directorios(self.project_folder)
@@ -76,7 +82,7 @@ class PromptController:
             self.view.left_panel.set_archivos_estado(True, len(self.selected_files))
             self.view.left_panel.mostrar_lista_archivos(self.selected_files)
 
-            self.file_manager = FileManager(self.obtener_ignorados(), self.obtener_solo_extensiones())
+            self.file_manager = FileManager(self.obtener_ignorados_archivos(), self.obtener_solo_extensiones())
             self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
             self.actualizar_prompt_final()
@@ -125,19 +131,27 @@ class PromptController:
         if not self.project_folder:
             return
 
-        self.file_manager = FileManager(self.obtener_ignorados(), self.obtener_solo_extensiones())
-        self.estructura = self.file_manager.genera_estructura_de_carpetas(self.project_folder)
+        # Update folder structure view
+        fm_struct = FileManager(self.obtener_ignorados_estructura(), self.obtener_solo_extensiones())
+        self.estructura = fm_struct.genera_estructura_de_carpetas(self.project_folder)
         self.view.center_panel.mostrar_estructura(self.estructura)
 
+        # Update file contents if any files selected
         if self.selected_files:
-            self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
+            fm_files = FileManager(self.obtener_ignorados_archivos(), self.obtener_solo_extensiones())
+            self.contenido_archivos = fm_files.extrae_contenido_archivos(self.selected_files)
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
         self.actualizar_prompt_final()
 
     def save_settings(self):
-        ignorados = self.obtener_ignorados()
+        ignorados_estructura = self.obtener_ignorados_estructura()
+        ignorados_archivos = self.obtener_ignorados_archivos()
         only_exts = self.obtener_solo_extensiones()
-        settings = {"ignore": ignorados, "only_extensions": only_exts}
+        settings = {
+            "ignore_structure": ignorados_estructura,
+            "ignore_files": ignorados_archivos,
+            "only_extensions": only_exts
+        }
         settings_file = Path("settings.json")
         try:
             settings_file.write_text(json.dumps(settings, indent=2), encoding="utf-8")
@@ -145,6 +159,24 @@ class PromptController:
             messagebox.showinfo(i18n.t("app_name"), i18n.t("save_success"))
         except Exception as e:
             self.view.left_panel._set_estado(self.view.left_panel.status_save, False)
+            messagebox.showerror(i18n.t("app_name"), f"{i18n.t('save_error')} {e}")
+
+    def save_ignore_files(self):
+        ignorados_archivos = self.obtener_ignorados_archivos()
+        settings_file = Path("settings.json")
+        try:
+            if settings_file.exists():
+                data = settings_file.read_text(encoding="utf-8")
+                obj = json.loads(data)
+            else:
+                obj = {}
+            obj["ignore_files"] = ignorados_archivos
+            settings_file.write_text(json.dumps(obj, indent=2), encoding="utf-8")
+            self.saved_ignore_files = ignorados_archivos
+            self.view.left_panel._set_estado(self.view.left_panel.status_save_files, True)
+            messagebox.showinfo(i18n.t("app_name"), i18n.t("save_success"))
+        except Exception as e:
+            self.view.left_panel._set_estado(self.view.left_panel.status_save_files, False)
             messagebox.showerror(i18n.t("app_name"), f"{i18n.t('save_error')} {e}")
 
     def set_path_in_files(self):
