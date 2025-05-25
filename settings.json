@@ -25,7 +25,6 @@
     "exe",
     "__init__.py",
     "docs",
-    "assets",
     "data",
     "scripts"
   ],

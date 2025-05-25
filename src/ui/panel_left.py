@@ -16,6 +16,8 @@ class LeftPanel:
             command=self.controller.seleccionar_prompt_base
         )
         self.btn_select_prompt.pack(pady=5, padx=10, fill="x")
+        self.btn_select_prompt.helper_text = i18n.t("help_select_prompt_base")
+        self.btn_select_prompt.bind("<Button-2>", self._show_helper)
 
         self.status_prompt = ctk.CTkLabel(
             self.frame,
@@ -37,6 +39,8 @@ class LeftPanel:
         self.entry_ignore_structure.pack(fill='x', padx=10)
         self.entry_ignore_structure.insert("0.0", ", ".join(self.controller.saved_ignore_structure if self.controller.saved_ignore_structure else config.FOLDERS_TO_IGNORE))
         self.entry_ignore_structure.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+        self.entry_ignore_structure.helper_text = i18n.t("help_ignore_structure")
+        self.entry_ignore_structure.bind("<Button-2>", self._show_helper)
 
         self.label_only_ext = ctk.CTkLabel(
             self.frame,
@@ -48,6 +52,8 @@ class LeftPanel:
         self.entry_only_ext.pack(fill='x', padx=10)
         self.entry_only_ext.insert("0.0", ", ".join(self.controller.saved_only_extensions))
         self.entry_only_ext.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+        self.entry_only_ext.helper_text = i18n.t("help_only_extensions")
+        self.entry_only_ext.bind("<Button-2>", self._show_helper)
 
         # Campos de ignore para selección de archivos
         self.label_ignore_files = ctk.CTkLabel(
@@ -60,6 +66,8 @@ class LeftPanel:
         self.entry_ignore_files.pack(fill='x', padx=10)
         self.entry_ignore_files.insert("0.0", ", ".join(self.controller.saved_ignore_files if self.controller.saved_ignore_files else config.FOLDERS_TO_IGNORE))
         self.entry_ignore_files.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+        self.entry_ignore_files.helper_text = i18n.t("help_ignore_select_files")
+        self.entry_ignore_files.bind("<Button-2>", self._show_helper)
 
         # Save settings button (moved below file ignore)
         self.btn_save_settings = ctk.CTkButton(
@@ -71,6 +79,8 @@ class LeftPanel:
             state="normal"
         )
         self.btn_save_settings.pack(pady=5, padx=10, fill="x")
+        self.btn_save_settings.helper_text = i18n.t("help_save_settings")
+        self.btn_save_settings.bind("<Button-2>", self._show_helper)
         # Estado del guardado general
         self.status_save = ctk.CTkLabel(
             self.frame,
@@ -87,6 +97,8 @@ class LeftPanel:
             command=self.controller.seleccionar_proyecto
         )
         self.btn_select_project.pack(pady=5, padx=10, fill="x")
+        self.btn_select_project.helper_text = i18n.t("help_select_project")
+        self.btn_select_project.bind("<Button-2>", self._show_helper)
 
         self.status_project = ctk.CTkLabel(
             self.frame,
@@ -104,6 +116,8 @@ class LeftPanel:
             state="disabled"
         )
         self.btn_select_files.pack(pady=5, padx=10, fill="x")
+        self.btn_select_files.helper_text = i18n.t("help_select_files")
+        self.btn_select_files.bind("<Button-2>", self._show_helper)
 
         self.status_files = ctk.CTkLabel(
             self.frame,
@@ -121,6 +135,8 @@ class LeftPanel:
             state="disabled"
         )
         self.btn_set_path.pack(pady=5, padx=10, fill="x")
+        self.btn_set_path.helper_text = i18n.t("help_set_path")
+        self.btn_set_path.bind("<Button-2>", self._show_helper)
 
         self.status_set_path = ctk.CTkLabel(
             self.frame,
@@ -139,6 +155,8 @@ class LeftPanel:
 
         self.listbox_files = ctk.CTkTextbox(self.frame, height=100)
         self.listbox_files.pack(fill="both", expand=False, padx=10, pady=(0, 10))
+        self.listbox_files.helper_text = i18n.t("help_selected_files")
+        self.listbox_files.bind("<Button-2>", self._show_helper)
 
         # Agrupamos widgets para estilos
         self.widgets = [
@@ -152,6 +170,9 @@ class LeftPanel:
             self.btn_set_path, self.status_set_path,
             self.label_selected_files, self.listbox_files
         ]
+        # Bind middle-click to show helper for any widget
+        root = self.frame.winfo_toplevel()
+        root.bind_all("<ButtonRelease-2>", self._show_helper)
 
     def set_prompt_base_estado(self, estado: bool):
         self._set_estado(self.status_prompt, estado)
@@ -218,3 +239,19 @@ class LeftPanel:
                     )
             except:
                 pass
+
+    def _show_helper(self, event):
+        widget = event.widget
+        # Buscar helper_text en el widget o sus ancestros
+        while widget:
+            text = getattr(widget, "helper_text", None)
+            if text:
+                # Crear popup CTk
+                popup = ctk.CTkToplevel(self.frame)
+                popup.title(i18n.t("app_name"))
+                popup.transient(self.frame)
+                popup.grab_set()
+                ctk.CTkLabel(popup, text=text, wraplength=400).pack(padx=20, pady=10)
+                ctk.CTkButton(popup, text="OK", command=popup.destroy).pack(pady=(0,10))
+                break
+            widget = getattr(widget, "master", None)

@@ -11,22 +11,27 @@ class RightPanel:
 
         self.title_label = ctk.CTkLabel(self.frame, text=i18n.t("generated_prompt"), font=("Segoe UI", 14, "bold"))
         self.title_label.pack(anchor='w', padx=10, pady=(10, 5))
+        self.title_label.helper_text = i18n.t("help_generated_prompt_label")
 
         self.text_prompt_final = ctk.CTkTextbox(self.frame, height=400)
         self.text_prompt_final.pack(fill="both", expand=True, padx=10, pady=5)
+        self.text_prompt_final.helper_text = i18n.t("help_text_prompt_final")
 
         botones_frame = ctk.CTkFrame(self.frame)
         botones_frame.pack(pady=10, padx=10)
 
         self.btn_copiar = ctk.CTkButton(botones_frame, text=i18n.t("copy"), command=self.controller.copiar_prompt, width=150, corner_radius=6, hover_color="#5aaae0")
         self.btn_copiar.pack(side="left", padx=10)
+        self.btn_copiar.helper_text = i18n.t("help_copy")
 
         self.btn_limpiar = ctk.CTkButton(botones_frame, text=i18n.t("clear"), command=self.controller.limpiar_todo, width=150)
         self.btn_limpiar.pack(side="left", padx=10)
+        self.btn_limpiar.helper_text = i18n.t("help_clear")
 
         # Label para contador de tokens
         self.label_token_count = ctk.CTkLabel(self.frame, text="Tokens: 0")
         self.label_token_count.pack(anchor='w', padx=10)
+        self.label_token_count.helper_text = i18n.t("help_token_count")
 
         # Frame para separar el prompt en partes
         self.split_frame = ctk.CTkFrame(self.frame)
@@ -35,17 +40,21 @@ class RightPanel:
         # Campo para tamaño de separación (tokens por parte)
         self.size_label = ctk.CTkLabel(self.split_frame, text=i18n.t("tokens_per_part"))
         self.size_label.pack(side="left", padx=5)
+        self.size_label.helper_text = i18n.t("help_tokens_per_part_label")
         self.chunk_size_entry = ctk.CTkEntry(self.split_frame, width=100)
         self.chunk_size_entry.insert(0, "50000")
         self.chunk_size_entry.pack(side="left", padx=5)
+        self.chunk_size_entry.helper_text = i18n.t("help_chunk_size_entry")
 
         # Botón para separar el prompt en partes
         self.btn_split = ctk.CTkButton(self.split_frame, text=f"{i18n.t('split_into')}: 0", command=self.split_prompt, width=150)
         self.btn_split.pack(side="left", padx=10)
+        self.btn_split.helper_text = i18n.t("help_split_prompt")
 
         # Menú de opciones para seleccionar la parte a copiar
         self.part_optionmenu = ctk.CTkComboBox(self.split_frame, values=[i18n.t("copy")], command=self.on_part_selected, width=150)
         self.part_optionmenu.pack(side="left", padx=10)
+        self.part_optionmenu.helper_text = i18n.t("help_part_optionmenu")
         # Valor inicial 'copy' para mostrar y luego deshabilitar
         self.part_optionmenu.set(i18n.t("copy"))
         self.part_optionmenu.configure(state="disabled")
@@ -57,6 +66,10 @@ class RightPanel:
             self.title_label, self.text_prompt_final, self.btn_copiar, self.btn_limpiar, self.label_token_count,
             self.btn_split, self.part_optionmenu, self.size_label, self.chunk_size_entry
         ]
+
+        # Bind middle-click to show helper for any widget
+        root = self.frame.winfo_toplevel()
+        root.bind_all("<ButtonRelease-2>", self._show_helper)
 
     def mostrar_prompt_final(self, prompt):
         self.text_prompt_final.delete("1.0", tk.END)
@@ -183,3 +196,18 @@ class RightPanel:
             self.controller.copiar_parte_prompt(message)
         except Exception:
             pass
+
+    def _show_helper(self, event):
+        widget = event.widget
+        # Recorrer ancestros buscando helper_text
+        while widget:
+            text = getattr(widget, "helper_text", None)
+            if text:
+                popup = ctk.CTkToplevel(self.frame)
+                popup.title(i18n.t("app_name"))
+                popup.transient(self.frame)
+                popup.grab_set()
+                ctk.CTkLabel(popup, text=text, wraplength=400).pack(padx=20, pady=10)
+                ctk.CTkButton(popup, text="OK", command=popup.destroy).pack(pady=(0,10))
+                break
+            widget = getattr(widget, "master", None)

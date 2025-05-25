@@ -46,6 +46,24 @@ translations = {
     "tokens_per_part": "Tokens por parte:",
     "split_into": "Separar en",
     "part": "Parte",
-    "context_intro": "A continuación proporcionaré el contexto y dividiré la pregunta en partes."
+    "context_intro": "A continuación proporcionaré el contexto y dividiré la pregunta en partes.",
+    "help_select_prompt_base": "Selecciona la base del prompt para usar como punto de partida.",
+    "help_ignore_structure": "Ingresa carpetas o patrones para ignorar al mostrar la estructura de carpetas.",
+    "help_only_extensions": "Especifica extensiones separadas por comas para filtrar los archivos.",
+    "help_ignore_select_files": "Ingresa carpetas o extensiones a ignorar durante la selección de archivos.",
+    "help_save_settings": "Guarda la configuración actual de ignorar carpetas y extensiones.",
+    "help_select_project": "Selecciona la carpeta raíz de tu proyecto para analizar.",
+    "help_select_files": "Selecciona los archivos que se incluirán en el prompt.",
+    "help_set_path": "Inserta o actualiza la ruta en los archivos seleccionados.",
+    "help_selected_files": "Muestra la lista de archivos que has seleccionado actualmente.",
+    "help_text_prompt_final": "Área de texto que muestra el prompt final generado.",
+    "help_chunk_size_entry": "Ingresa el número de tokens por parte para dividir el prompt.",
+    "help_copy": "Copia el prompt generado al portapapeles.",
+    "help_clear": "Limpia todo el contenido del prompt y campos asociados.",
+    "help_split_prompt": "Divide el prompt en partes según el número de tokens por parte especificado.",
+    "help_generated_prompt_label": "Etiqueta con el título del panel de Prompt generado.",
+    "help_token_count": "Etiqueta que muestra la cantidad actual de tokens del prompt generado.",
+    "help_tokens_per_part_label": "Etiqueta que indica los tokens por parte para dividir el prompt.",
+    "help_part_optionmenu": "Menú desplegable para seleccionar la parte del prompt a copiar."
 }
 # Path: src/utils/translations_es.py

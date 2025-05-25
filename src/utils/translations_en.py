@@ -46,6 +46,24 @@ translations = {
     "tokens_per_part": "Tokens per part:",
     "split_into": "Split into",
     "part": "Part",
-    "context_intro": "I will now provide the context and split the question into parts."
+    "context_intro": "I will now provide the context and split the question into parts.",
+    "help_select_prompt_base": "Select the prompt base to use as a starting point.",
+    "help_ignore_structure": "Enter folders or patterns to ignore when displaying folder structure.",
+    "help_only_extensions": "Specify comma-separated extensions to filter files.",
+    "help_ignore_select_files": "Enter folders or extensions to ignore during file selection.",
+    "help_save_settings": "Save the current ignore folders and extensions settings.",
+    "help_select_project": "Select your project's root folder for analysis.",
+    "help_select_files": "Select the files to be included in the prompt.",
+    "help_set_path": "Insert or update the path in selected files.",
+    "help_selected_files": "Displays the list of files you have currently selected.",
+    "help_text_prompt_final": "Text area showing the generated final prompt.",
+    "help_chunk_size_entry": "Enter the number of tokens per part to split the prompt.",
+    "help_copy": "Copy the generated prompt to the clipboard.",
+    "help_clear": "Clear all prompt content and associated fields.",
+    "help_split_prompt": "Split the prompt into parts based on specified tokens per part.",
+    "help_generated_prompt_label": "Label displaying the title of the generated prompt panel.",
+    "help_token_count": "Label showing the current token count of the generated prompt.",
+    "help_tokens_per_part_label": "Label indicating the tokens per part for splitting the prompt.",
+    "help_part_optionmenu": "Dropdown menu to select which part of the prompt to copy."
 }
 # Path: src/utils/translations_en.py
