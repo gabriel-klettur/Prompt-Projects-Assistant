@@ -45,6 +45,9 @@ class RightPanel:
         self.chunk_size_entry.insert(0, "50000")
         self.chunk_size_entry.pack(side="left", padx=5)
         self.chunk_size_entry.helper_text = i18n.t("help_chunk_size_entry")
+        # Recalculate split parts when chunk size changes
+        self.chunk_size_entry.bind("<KeyRelease>", lambda event: self.update_token_count())
+        self.chunk_size_entry.bind("<FocusOut>", lambda event: self.update_token_count())
 
         # Botón para separar el prompt en partes
         self.btn_split = ctk.CTkButton(self.split_frame, text=f"{i18n.t('split_into')}: 0", command=self.split_prompt, width=150)

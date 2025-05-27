@@ -26,7 +26,8 @@
     "__init__.py",
     "docs",
     "data",
-    "scripts"
+    "scripts",
+    "assets"
   ],
   "only_extensions": []
 }
