@@ -16,6 +16,9 @@ class RightPanel:
         self.text_prompt_final = ctk.CTkTextbox(self.frame, height=400)
         self.text_prompt_final.pack(fill="both", expand=True, padx=10, pady=5)
         self.text_prompt_final.helper_text = i18n.t("help_text_prompt_final")
+        # Update token count when user edits the prompt text area
+        self.text_prompt_final.bind("<KeyRelease>", lambda event: self.update_token_count())
+        self.text_prompt_final.bind("<FocusOut>", lambda event: self.update_token_count())
 
         botones_frame = ctk.CTkFrame(self.frame)
         botones_frame.pack(pady=10, padx=10)

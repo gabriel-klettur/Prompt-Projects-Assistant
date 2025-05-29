@@ -29,5 +29,7 @@
     "scripts",
     "assets"
   ],
-  "only_extensions": []
+  "only_extensions": [
+    "py"
+  ]
 }

@@ -77,24 +77,23 @@ class PromptController:
         self.gui_helper.folders_to_ignore = self.obtener_ignorados_archivos()
         self.gui_helper.only_extensions = self.obtener_solo_extensiones()
 
-        self.selected_files = self.gui_helper.mostrar_arbol_directorios(self.project_folder)
-        if self.selected_files:
-            self.view.left_panel.set_archivos_estado(True, len(self.selected_files))
-            self.view.left_panel.mostrar_lista_archivos(self.selected_files)
+        # Allow zero-file selection: always update list and prompt
+        self.selected_files = self.gui_helper.mostrar_arbol_directorios(self.project_folder) or []
+        self.view.left_panel.set_archivos_estado(True, len(self.selected_files))
+        self.view.left_panel.mostrar_lista_archivos(self.selected_files)
 
-            self.file_manager = FileManager(self.obtener_ignorados_archivos(), self.obtener_solo_extensiones())
+        self.file_manager = FileManager(self.obtener_ignorados_archivos(), self.obtener_solo_extensiones())
+        # Extract contents if any files selected, else leave empty
+        if self.selected_files:
             self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
-            self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
-            self.actualizar_prompt_final()
         else:
-            messagebox.showwarning(i18n.t("warning_title"), i18n.t("no_files_selected"))
-            self.view.left_panel.set_archivos_estado(False)
+            self.contenido_archivos = ''
+        self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
+        self.actualizar_prompt_final()
 
     def actualizar_prompt_final(self):
         prompt_base = self.view.center_panel.obtener_prompt_base()
-        if not prompt_base:
-            return
-
+        # Always build the final prompt, allowing folder structure even without prompt base
         self.prompt_final = self.view.right_panel.construir_prompt_final(
             prompt_base,
             self.estructura,
