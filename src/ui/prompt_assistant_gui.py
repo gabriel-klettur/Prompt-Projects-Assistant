@@ -202,36 +202,21 @@ class PromptAssistantGUI:
                         self._cargar_arbol(tree, hijo, nodos_rutas)
 
     def _preparar_arbol(self, tree, carpeta, nodos_rutas):
-        # Si se especificaron only_folders, construir manualmente su árbol completo
+        # Si se especificaron only_folders, incluir carpetas coincidentes en cualquier nivel
         if self.only_folders:
-            path_to_node = {}
-            for folder in self.only_folders:
-                folder_path = os.path.join(carpeta, folder)
-                if not os.path.isdir(folder_path):
-                    continue
-                # Nodo raíz de esta carpeta
-                node = tree.insert('', 'end', text=folder, open=True)
+            matched = []
+            for root, dirs, files in os.walk(carpeta):
+                dirs[:] = [d for d in dirs if not d.startswith('.') and d not in self.folders_to_ignore]
+                for d in dirs:
+                    if d in self.only_folders:
+                        matched.append(os.path.join(root, d))
+            for folder_path in matched:
+                rel = os.path.relpath(folder_path, carpeta)
+                node = tree.insert('', 'end', text=rel, open=True)
                 nodos_rutas[node] = folder_path
-                path_to_node[folder_path] = node
-                # Recorrer jerarquía de esta carpeta
-                for root, dirs, files in os.walk(folder_path):
-                    parent = path_to_node.get(root)
-                    if parent is None:
-                        continue
-                    for d in sorted(dirs):
-                        p_dir = os.path.join(root, d)
-                        child = tree.insert(parent, 'end', text=d, open=False)
-                        nodos_rutas[child] = p_dir
-                        path_to_node[p_dir] = child
-                    for f in sorted(files):
-                        p_file = os.path.join(root, f)
-                        child = tree.insert(parent, 'end', text=f, open=False)
-                        nodos_rutas[child] = p_file
-            # Solo expandir y salir si se encontraron carpetas
-            if path_to_node:
-                for root_path, root_node in path_to_node.items():
-                    self._expandir_todo(tree, root_node, nodos_rutas)
-                return
+                self._cargar_arbol(tree, node, nodos_rutas)
+                self._expandir_todo(tree, node, nodos_rutas)
+            return
         # Caso por defecto: toda la estructura del proyecto
         root_nodo = self._insertar_nodo(tree, '', carpeta, carpeta, nodos_rutas)
         if root_nodo:
