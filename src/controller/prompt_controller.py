@@ -22,6 +22,7 @@ class PromptController:
         self.saved_ignore_structure = []
         self.saved_ignore_files = []
         self.saved_only_extensions = []
+        self.saved_only_folders = []
         try:
             settings_file = Path("settings.json")
             if settings_file.exists():
@@ -30,6 +31,7 @@ class PromptController:
                 self.saved_ignore_structure = obj.get("ignore_structure", [])
                 self.saved_ignore_files = obj.get("ignore_files", [])
                 self.saved_only_extensions = obj.get("only_extensions", [])
+                self.saved_only_folders = obj.get("only_folders", [])
         except Exception as e:
             print(f"Error loading settings: {e}")
 
@@ -44,6 +46,10 @@ class PromptController:
     def obtener_solo_extensiones(self):
         texto = self.view.left_panel.entry_only_ext.get("1.0", "end").strip()
         return [ext.strip() for ext in texto.split(",") if ext.strip()]
+
+    def obtener_solo_carpetas(self):
+        texto = self.view.left_panel.entry_only_folders.get("1.0", "end").strip()
+        return [item.strip() for item in texto.split(",") if item.strip()]
 
     def seleccionar_prompt_base(self):
         path = self.gui_helper.seleccionar_ruta(tipo="archivo")
@@ -61,7 +67,7 @@ class PromptController:
         path = self.gui_helper.seleccionar_ruta(tipo="carpeta")
         if path:
             self.project_folder = path
-            self.file_manager = FileManager(self.obtener_ignorados_estructura(), self.obtener_solo_extensiones())
+            self.file_manager = FileManager(self.obtener_ignorados_estructura(), self.obtener_solo_extensiones(), self.obtener_solo_carpetas())
             self.estructura = self.file_manager.genera_estructura_de_carpetas(path)
             self.view.left_panel.set_project_estado(True)
             self.view.center_panel.mostrar_estructura(self.estructura)
@@ -74,15 +80,17 @@ class PromptController:
             messagebox.showerror(i18n.t("error_title"), i18n.t("project_folder_required"))
             return
 
+        # Actualizar filtros en GUI helper
         self.gui_helper.folders_to_ignore = self.obtener_ignorados_archivos()
         self.gui_helper.only_extensions = self.obtener_solo_extensiones()
+        self.gui_helper.only_folders = self.obtener_solo_carpetas()
 
         # Allow zero-file selection: always update list and prompt
         self.selected_files = self.gui_helper.mostrar_arbol_directorios(self.project_folder) or []
         self.view.left_panel.set_archivos_estado(True, len(self.selected_files))
         self.view.left_panel.mostrar_lista_archivos(self.selected_files)
 
-        self.file_manager = FileManager(self.obtener_ignorados_archivos(), self.obtener_solo_extensiones())
+        self.file_manager = FileManager(self.obtener_ignorados_archivos(), self.obtener_solo_extensiones(), self.obtener_solo_carpetas())
         # Extract contents if any files selected, else leave empty
         if self.selected_files:
             self.contenido_archivos = self.file_manager.extrae_contenido_archivos(self.selected_files)
@@ -138,13 +146,13 @@ class PromptController:
             return
 
         # Update folder structure view
-        fm_struct = FileManager(self.obtener_ignorados_estructura(), self.obtener_solo_extensiones())
+        fm_struct = FileManager(self.obtener_ignorados_estructura(), self.obtener_solo_extensiones(), self.obtener_solo_carpetas())
         self.estructura = fm_struct.genera_estructura_de_carpetas(self.project_folder)
         self.view.center_panel.mostrar_estructura(self.estructura)
 
         # Update file contents if any files selected
         if self.selected_files:
-            fm_files = FileManager(self.obtener_ignorados_archivos(), self.obtener_solo_extensiones())
+            fm_files = FileManager(self.obtener_ignorados_archivos(), self.obtener_solo_extensiones(), self.obtener_solo_carpetas())
             self.contenido_archivos = fm_files.extrae_contenido_archivos(self.selected_files)
             self.view.center_panel.mostrar_contenido_archivos(self.contenido_archivos)
         self.actualizar_prompt_final()
@@ -153,10 +161,12 @@ class PromptController:
         ignorados_estructura = self.obtener_ignorados_estructura()
         ignorados_archivos = self.obtener_ignorados_archivos()
         only_exts = self.obtener_solo_extensiones()
+        only_folders = self.obtener_solo_carpetas()
         settings = {
             "ignore_structure": ignorados_estructura,
             "ignore_files": ignorados_archivos,
-            "only_extensions": only_exts
+            "only_extensions": only_exts,
+            "only_folders": only_folders
         }
         settings_file = Path("settings.json")
         try:

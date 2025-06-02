@@ -10,12 +10,13 @@ from tkinter import ttk
 
 
 class PromptAssistantGUI:
-    def __init__(self, root, folders_to_ignore=None, only_extensions=None, theme_styles=None):
+    def __init__(self, root, folders_to_ignore=None, only_extensions=None, theme_styles=None, only_folders=None):
         self.root = root
         self.folders_to_ignore = folders_to_ignore if folders_to_ignore else []
         self.only_extensions = only_extensions if only_extensions else []
         self.archivos_seleccionados = []
         self.theme_styles = theme_styles or {}
+        self.only_folders = only_folders if only_folders else []
 
     def seleccionar_ruta(self, tipo="archivo"):
         if tipo == "archivo":
@@ -35,7 +36,7 @@ class PromptAssistantGUI:
 
     def mostrar_arbol_directorios(self, carpeta):
         self.archivos_seleccionados = []
-
+        # Mostrar sólo las carpetas indicadas en only_folders, o toda la estructura si está vacío
         ventana = ctk.CTkToplevel(self.root)
         ventana.title(i18n.t("select_files_title"))
 
@@ -43,11 +44,6 @@ class PromptAssistantGUI:
         ancho_ventana, alto_ventana = 800, 600
         ventana.geometry(f"{ancho_ventana}x{alto_ventana}")
         self._centro_ventana(ventana, ancho_ventana, alto_ventana)
-
-        # Modo "modal": la ventana secundaria permanece encima
-        ventana.transient(self.root)
-        ventana.grab_set()
-        ventana.lift()
 
         # Frame superior donde colocamos la sección de extensiones
         top_frame = ctk.CTkFrame(ventana)
@@ -193,6 +189,7 @@ class PromptAssistantGUI:
     def _cargar_arbol(self, tree, nodo, nodos_rutas):
         path = nodos_rutas.get(nodo, '')
         if path and os.path.isdir(path):
+            # Limpiar hijos actuales del nodo
             for hijo in tree.get_children(nodo):
                 tree.delete(hijo)
 
@@ -205,6 +202,37 @@ class PromptAssistantGUI:
                         self._cargar_arbol(tree, hijo, nodos_rutas)
 
     def _preparar_arbol(self, tree, carpeta, nodos_rutas):
+        # Si se especificaron only_folders, construir manualmente su árbol completo
+        if self.only_folders:
+            path_to_node = {}
+            for folder in self.only_folders:
+                folder_path = os.path.join(carpeta, folder)
+                if not os.path.isdir(folder_path):
+                    continue
+                # Nodo raíz de esta carpeta
+                node = tree.insert('', 'end', text=folder, open=True)
+                nodos_rutas[node] = folder_path
+                path_to_node[folder_path] = node
+                # Recorrer jerarquía de esta carpeta
+                for root, dirs, files in os.walk(folder_path):
+                    parent = path_to_node.get(root)
+                    if parent is None:
+                        continue
+                    for d in sorted(dirs):
+                        p_dir = os.path.join(root, d)
+                        child = tree.insert(parent, 'end', text=d, open=False)
+                        nodos_rutas[child] = p_dir
+                        path_to_node[p_dir] = child
+                    for f in sorted(files):
+                        p_file = os.path.join(root, f)
+                        child = tree.insert(parent, 'end', text=f, open=False)
+                        nodos_rutas[child] = p_file
+            # Solo expandir y salir si se encontraron carpetas
+            if path_to_node:
+                for root_path, root_node in path_to_node.items():
+                    self._expandir_todo(tree, root_node, nodos_rutas)
+                return
+        # Caso por defecto: toda la estructura del proyecto
         root_nodo = self._insertar_nodo(tree, '', carpeta, carpeta, nodos_rutas)
         if root_nodo:
             self._cargar_arbol(tree, root_nodo, nodos_rutas)

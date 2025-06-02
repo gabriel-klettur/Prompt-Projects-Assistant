@@ -50,6 +50,8 @@ translations = {
     "help_select_prompt_base": "Selecciona la base del prompt para usar como punto de partida.",
     "help_ignore_structure": "Ingresa carpetas o patrones para ignorar al mostrar la estructura de carpetas.",
     "help_only_extensions": "Especifica extensiones separadas por comas para filtrar los archivos.",
+    "only_folders": "Solo carpetas:",
+    "help_only_folders": "Especifica carpetas separadas por comas para filtrar la estructura de carpetas.",
     "help_ignore_select_files": "Ingresa carpetas o extensiones a ignorar durante la selección de archivos.",
     "help_save_settings": "Guarda la configuración actual de ignorar carpetas y extensiones.",
     "help_select_project": "Selecciona la carpeta raíz de tu proyecto para analizar.",

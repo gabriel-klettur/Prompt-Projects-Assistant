@@ -40,6 +40,8 @@ translations = {
     "tokens_per_part": "Tákn per hluta:",
     "split_into": "Skipta í",
     "part": "Hluti",
+    "only_folders": "Aðeins möppur:",
+    "help_only_folders": "Tilgreindu möppur aðskildar með kommu til að sía möppubyggingu.",
     "context_intro": "Ég mun nú veita samhengi og skipta spurningunni í hluta."
 }
 # Path: src/utils/translations_is.py

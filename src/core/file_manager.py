@@ -1,13 +1,13 @@
-
 # Path: src/core/file_manager.py
 import os
 from src.utils import i18n
 
 
 class FileManager:
-    def __init__(self, folders_to_ignore=None, only_extensions=None):
+    def __init__(self, folders_to_ignore=None, only_extensions=None, only_folders=None):
         self.folders_to_ignore = folders_to_ignore if folders_to_ignore else []
         self.only_extensions = only_extensions if only_extensions else []
+        self.only_folders = only_folders if only_folders else []
 
     def _debe_incluir_archivo(self, nombre_archivo):
         if nombre_archivo.startswith("."):
@@ -23,8 +23,9 @@ class FileManager:
         directorio = os.path.abspath(directorio)
 
         for root, dirs, files in os.walk(directorio):
-            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in self.folders_to_ignore]
             nivel = root.replace(directorio, '').count(os.sep)
+            # Mostrar toda la estructura, only_folders no aplica aquí
+            dirs[:] = [d for d in dirs if not d.startswith('.') and d not in self.folders_to_ignore]
             indent = '|  ' * nivel
 
             estructura += f"{indent}+ {os.path.basename(root)}/\n"

@@ -26,8 +26,15 @@ class MainWindow:
         self._crear_seleccion_idioma_y_diseno()
 
         # Inicializar GUI helper y controlador
-        self.gui_helper = PromptAssistantGUI(self.root, FOLDERS_TO_IGNORE, None, self.theme_manager.get_styles())
+        self.gui_helper = PromptAssistantGUI(
+            self.root,
+            FOLDERS_TO_IGNORE,
+            None,
+            self.theme_manager.get_styles()
+        )
         self.controller = PromptController(self.gui_helper, self)
+        # Aplicar configuración de only_folders cargada en PromptController
+        self.gui_helper.only_folders = self.controller.saved_only_folders
 
         # Crear contenedor de paneles
         container = ctk.CTkFrame(self.root)

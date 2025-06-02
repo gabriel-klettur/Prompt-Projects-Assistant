@@ -50,6 +50,8 @@ translations = {
     "help_select_prompt_base": "Select the prompt base to use as a starting point.",
     "help_ignore_structure": "Enter folders or patterns to ignore when displaying folder structure.",
     "help_only_extensions": "Specify comma-separated extensions to filter files.",
+    "only_folders": "Only folders:",
+    "help_only_folders": "Specify comma-separated folders to filter the folder structure.",
     "help_ignore_select_files": "Enter folders or extensions to ignore during file selection.",
     "help_save_settings": "Save the current ignore folders and extensions settings.",
     "help_select_project": "Select your project's root folder for analysis.",

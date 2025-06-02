@@ -55,6 +55,20 @@ class LeftPanel:
         self.entry_only_ext.helper_text = i18n.t("help_only_extensions")
         self.entry_only_ext.bind("<Button-2>", self._show_helper)
 
+        # Campo 'Only folders' para especificar carpetas a incluir
+        self.label_only_folders = ctk.CTkLabel(
+            self.frame,
+            text=i18n.t("only_folders")
+        )
+        self.label_only_folders.pack(anchor='w', padx=10, pady=(15, 5))
+
+        self.entry_only_folders = ctk.CTkTextbox(self.frame, height=40)
+        self.entry_only_folders.pack(fill='x', padx=10)
+        self.entry_only_folders.insert("0.0", ", ".join(self.controller.saved_only_folders))
+        self.entry_only_folders.bind("<KeyRelease>", lambda e: self.controller.on_ignore_change())
+        self.entry_only_folders.helper_text = i18n.t("help_only_folders")
+        self.entry_only_folders.bind("<Button-2>", self._show_helper)
+
         # Campos de ignore para selección de archivos
         self.label_ignore_files = ctk.CTkLabel(
             self.frame,
@@ -163,6 +177,7 @@ class LeftPanel:
             self.btn_select_prompt, self.status_prompt,
             self.label_ignore_structure, self.entry_ignore_structure,
             self.label_only_ext, self.entry_only_ext,
+            self.label_only_folders, self.entry_only_folders,
             self.label_ignore_files, self.entry_ignore_files,
             self.btn_save_settings, self.status_save,
             self.btn_select_project, self.status_project,
