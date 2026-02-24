@@ -27,19 +27,10 @@
     "docs",
     "data",
     "scripts",
-    "assets",
-    "editor",
-    "roguelike_engine",
-    "editor",
-    "effects",
-    "particles",
-    "z_layer"
+    "assets"
   ],
   "only_extensions": [
     "py"
   ],
-  "only_folders": [
-    "ecs",
-    "src"
-  ]
+  "only_folders": []
 }
